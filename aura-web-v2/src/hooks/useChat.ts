@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { chatApi } from '../services/chat';
 import type { ChatMessage } from '../types/chat';
-
 export interface DisplayMessage {
   id: string;
   sender: string;
@@ -25,6 +24,9 @@ export const useChat = (activeProject: string | null) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ChatMessage[]>([]);
   const [isBooting, setIsBooting] = useState(true);
+  // Use a ref to track the processing state without causing the sendMessage callback to be recreated.
+  const isProcessingRef = useRef(isProcessing);
+  isProcessingRef.current = isProcessing;
 
   const addMessage = useCallback((
     sender: DisplayMessage['sender'],
@@ -73,16 +75,16 @@ export const useChat = (activeProject: string | null) => {
 
   // Effect to add the project prompt AFTER booting, if no project is active
   useEffect(() => {
-    if (!isBooting && !activeProject) {
-      const lastMessage = messages[messages.length - 1];
-      if (!lastMessage || lastMessage.content !== PROJECT_PROMPT) {
-        addMessage('SYSTEM', PROJECT_PROMPT, 'info');
-      }
+    // This effect should only run when the booting status or active project changes.
+    // By removing `messages` from the dependency array, we prevent this from re-running
+    // on every new message, making it more efficient and predictable.
+    if (isBooting === false && activeProject === null) {
+      addMessage('SYSTEM', PROJECT_PROMPT, 'info');
     }
-  }, [isBooting, activeProject, messages, addMessage]);
+  }, [isBooting, activeProject, addMessage]);
 
   const sendMessage = useCallback(async (userInput: string) => {
-    if (!activeProject || !userInput.trim() || isProcessing) {
+    if (!activeProject || !userInput.trim() || isProcessingRef.current) {
       return;
     }
 
@@ -111,7 +113,7 @@ export const useChat = (activeProject: string | null) => {
     } finally {
       setIsProcessing(false);
     }
-  }, [activeProject, conversationHistory, isProcessing, addMessage]);
+  }, [activeProject, conversationHistory, addMessage]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
