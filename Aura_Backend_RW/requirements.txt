@@ -4,7 +4,8 @@ python-dotenv
 aiohttp
 SQLAlchemy
 # --- THE FIX: Using a version known for broad wheel support ---
-psycopg2-binary==2.9.9
+# --- THE FIX: Switched to the modern psycopg3 which has better binary wheel support ---
+psycopg[binary]
 passlib==1.7.4
 bcrypt==4.0.1
 python-jose[cryptography]

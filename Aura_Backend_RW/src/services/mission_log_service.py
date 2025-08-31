@@ -201,7 +201,7 @@ class MissionLogService:
         """Returns the initial user goal that started the mission."""
         return self._initial_user_goal
 
-    async def update_task(self, user_id: str, task_id: int, description: str) -> bool:
+    async def update_task(self, user_id: str, task_id: int, description: str) -> Optional[Dict[str, Any]]:
         """Updates the description of a specific task."""
         if not description or not description.strip():
             raise ValueError("Task description cannot be empty.")
@@ -212,9 +212,9 @@ class MissionLogService:
                 self._save_log_to_disk()
                 await self._notify_ui(user_id)
                 logger.info(f"Updated task {task_id} for user {user_id}.")
-                return True
+                return task
         logger.warning(f"Attempted to update non-existent task {task_id} for user {user_id}.")
-        return False
+        return None
 
     async def delete_task(self, user_id: str, task_id: int) -> bool:
         """Deletes a specific task from the log."""

@@ -67,7 +67,7 @@ async def add_mission_task(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.put("/{project_name}/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/{project_name}/tasks/{task_id}", response_model=schemas.Task, status_code=status.HTTP_200_OK)
 async def update_mission_task(
     project_name: str,
     task_id: int,
@@ -77,13 +77,14 @@ async def update_mission_task(
 ):
     """Updates the description of an existing task."""
     try:
-        success = await mission_log.update_task(
+        updated_task = await mission_log.update_task(
             user_id=str(current_user.id),
             task_id=task_id,
             description=request.description
         )
-        if not success:
+        if not updated_task:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with ID {task_id} not found.")
+        return updated_task
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

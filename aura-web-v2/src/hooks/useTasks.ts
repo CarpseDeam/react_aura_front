@@ -2,12 +2,26 @@
 import { useState, useEffect, useCallback } from 'react';
 import { tasksApi } from '../services/tasks';
 
+// This is the shape of the data coming from the backend API
+export interface ApiTask {
+  id: number;
+  description: string;
+  done: boolean;
+  last_error: string | null;
+}
+
+// This is the shape we want to use in our components
 export interface Task {
-  id: string;
+  id: number;
   description: string;
   status: 'pending' | 'in_progress' | 'completed' | 'failed';
-  order?: number;
 }
+
+const transformApiTask = (apiTask: ApiTask): Task => ({
+  id: apiTask.id,
+  description: apiTask.description,
+  status: apiTask.done ? 'completed' : (apiTask.last_error ? 'failed' : 'pending'),
+});
 
 export const useTasks = (activeProject: string | null) => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -25,8 +39,9 @@ export const useTasks = (activeProject: string | null) => {
     setError('');
 
     try {
-      const data = await tasksApi.getTasks(activeProject);
-      setTasks(data);
+      const apiTasks: ApiTask[] = await tasksApi.getTasks(activeProject);
+      const transformedTasks = apiTasks.map(transformApiTask);
+      setTasks(transformedTasks);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tasks');
       setTasks([]);
@@ -39,29 +54,29 @@ export const useTasks = (activeProject: string | null) => {
     if (!activeProject) return;
 
     try {
-      const newTask = await tasksApi.addTask(activeProject, description);
-      setTasks(prevTasks => [...prevTasks, newTask]);
+      const newTaskFromApi: ApiTask = await tasksApi.addTask(activeProject, description);
+      setTasks(prevTasks => [...prevTasks, transformApiTask(newTaskFromApi)]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add task');
     }
   }, [activeProject]);
 
-  const updateTask = useCallback(async (taskId: string, description: string) => {
+  const updateTask = useCallback(async (taskId: number, description: string) => {
     if (!activeProject) return;
 
     try {
-      const updatedTask = await tasksApi.updateTask(activeProject, taskId, description);
-      setTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? updatedTask : task)));
+      const updatedTaskFromApi: ApiTask = await tasksApi.updateTask(activeProject, taskId.toString(), description);
+      setTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? transformApiTask(updatedTaskFromApi) : task)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update task');
     }
   }, [activeProject]);
 
-  const deleteTask = useCallback(async (taskId: string) => {
+  const deleteTask = useCallback(async (taskId: number) => {
     if (!activeProject) return;
 
     try {
-      await tasksApi.deleteTask(activeProject, taskId);
+      await tasksApi.deleteTask(activeProject, taskId.toString());
       setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete task');
