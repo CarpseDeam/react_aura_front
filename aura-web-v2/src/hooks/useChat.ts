@@ -46,7 +46,7 @@ export const useChat = (activeProject: string | null) => {
   useEffect(() => {
     setMessages([]);
     setIsBooting(true);
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
     let messageIndex = 0;
 
     const showNextMessage = () => {
