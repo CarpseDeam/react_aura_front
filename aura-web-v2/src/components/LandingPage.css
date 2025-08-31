@@ -3,7 +3,7 @@
   min-height: 100vh;
   background: #1a1a1a;
   color: #ffffff;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
 }
 
 /* Header */
@@ -38,6 +38,7 @@
   font-weight: 500;
   letter-spacing: 0.05em;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .landing-nav-button:hover {
@@ -54,32 +55,25 @@
 }
 
 .hero-logo {
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
-.aura-logo {
-  font-size: clamp(4rem, 8vw, 8rem);
-  font-weight: 900;
+.aura-ascii-logo {
+  font-family: 'IBM Plex Mono', 'Consolas', monospace;
   color: #f4b942;
-  text-shadow:
-    0 1px 0 #d4951f,
-    0 2px 0 #d4951f,
-    0 3px 0 #d4951f,
-    0 4px 0 #d4951f,
-    0 5px 0 #d4951f,
-    0 6px 0 #d4951f,
-    0 8px 10px rgba(0,0,0,0.3);
-  letter-spacing: 0.1em;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-shadow: 0 0 5px rgba(244, 185, 66, 0.4), 0 0 10px rgba(244, 185, 66, 0.3);
   margin: 0;
-  line-height: 0.9;
-  transform: perspective(500px) rotateX(15deg);
+  white-space: pre;
+  text-align: center;
 }
 
 .hero-tagline {
-  font-size: 1.1rem;
-  color: #cccccc;
+  font-size: 0.9rem;
+  color: #888;
   letter-spacing: 0.3em;
-  margin: 2rem 0;
+  margin: 1rem 0 3rem;
   font-weight: 300;
 }
 
@@ -114,6 +108,7 @@
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  font-family: 'Inter', sans-serif; /* Use a more readable font for paragraphs */
 }
 
 .hero-description strong {
@@ -148,7 +143,6 @@
   font-size: 1.2rem;
   color: #f4b942;
   margin: 0 0 1rem;
-  font-family: 'JetBrains Mono', 'Consolas', monospace;
   font-weight: 600;
 }
 
@@ -157,6 +151,7 @@
   line-height: 1.6;
   color: #cccccc;
   margin: 0;
+  font-family: 'Inter', sans-serif; /* Use a more readable font for paragraphs */
 }
 
 /* Call to Action */
@@ -177,6 +172,7 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   box-shadow: 0 4px 15px rgba(244, 185, 66, 0.3);
+  font-family: inherit;
 }
 
 .launch-button:hover {
@@ -209,7 +205,7 @@
   }
 
   .hero-tagline {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     letter-spacing: 0.2em;
   }
 }

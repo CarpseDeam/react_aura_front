@@ -3,6 +3,19 @@ import { LoginModal } from './auth/LoginModal';
 import { RegisterModal } from './auth/RegisterModal';
 import './LandingPage.css';
 
+const AuraAsciiLogo = () => (
+  <pre className="aura-ascii-logo">
+    {`
+    █████╗ ██╗   ██╗██████╗  █████╗
+   ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+   ███████║██║   ██║██████╔╝███████║
+   ██╔══██║██║   ██║██╔══██╗██╔══██║
+   ██║  ██║╚██████╔╝██║  ██║██║  ██║
+   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+    `}
+  </pre>
+);
+
 export const LandingPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -27,8 +40,8 @@ export const LandingPage = () => {
       {/* Hero Section */}
       <main className="landing-hero">
         <div className="hero-logo">
-          <h1 className="aura-logo">AURA</h1>
-          <p className="hero-tagline">A U T O N O M O U S V I R T U A L M A C H I N E</p>
+          <AuraAsciiLogo />
+          <p className="hero-tagline">A U T O N O M O U S  V I R T U A L  M A C H I N E</p>
         </div>
 
         <div className="hero-content">
