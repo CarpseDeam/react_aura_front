@@ -279,7 +279,7 @@
 .right-panel {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* This will be corrected */
 }
 
 .workspace-view {
@@ -298,6 +298,96 @@
 .workspace-placeholder h2 {
   color: #0ff;
   margin-bottom: 16px;
+}
+
+/* CHAT INTERFACE STYLES */
+.log-display {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #0ff #1a1a1a;
+}
+
+.prompt-area {
+  border-top: 1px solid #0ff;
+  padding: 12px;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+}
+
+.prompt-prefix {
+  color: #0ff;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.prompt-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.prompt-input::placeholder {
+  color: #666;
+}
+
+.send-button {
+  background: #0ff;
+  color: #0f0f0f;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.send-button:disabled {
+  background: #555;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.system-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.system-prefix {
+  font-weight: bold;
+  color: #f4b942; /* AURA Gold */
+}
+
+.system-message.user .system-prefix {
+  color: #0ff; /* User Cyan */
+}
+
+.system-text {
+  color: #ccc;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+  color: #0ff;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Modal Styles */
@@ -384,6 +474,10 @@
     height: 200px;
     border-right: none;
     border-bottom: 1px solid #0ff;
+  }
+
+  .right-panel {
+    flex-direction: column; /* Correct for mobile */
   }
 
   .header-right {
