@@ -1,9 +1,8 @@
-// src/services/projects.ts
 import { API_BASE_URL, getAuthHeaders } from './api';
 
 export const projectsApi = {
   async getProjects() {
-    const response = await fetch(`${API_BASE_URL}/api/missions`, {
+    const response = await fetch(`${API_BASE_URL}/agent/projects`, {
       headers: getAuthHeaders()
     });
     if (!response.ok) {
@@ -13,10 +12,9 @@ export const projectsApi = {
   },
 
   async createProject(projectName: string) {
-    const response = await fetch(`${API_BASE_URL}/api/missions`, {
+    const response = await fetch(`${API_BASE_URL}/agent/projects/${projectName}`, {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ project_name: projectName })
+      headers: getAuthHeaders()
     });
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
@@ -26,7 +24,7 @@ export const projectsApi = {
   },
 
   async deleteProject(projectName: string) {
-    const response = await fetch(`${API_BASE_URL}/api/missions/${projectName}`, {
+    const response = await fetch(`${API_BASE_URL}/agent/projects/${projectName}`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     });

@@ -1,4 +1,3 @@
-// src/services/tasks.ts
 import { API_BASE_URL, getAuthHeaders } from './api';
 
 export const tasksApi = {
@@ -55,7 +54,7 @@ export const tasksApi = {
   },
 
   async dispatchMission(projectName: string) {
-    const response = await fetch(`${API_BASE_URL}/agent/projects/dispatch`, {
+    const response = await fetch(`${API_BASE_URL}/agent/dispatch`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ project_name: projectName })
