@@ -69,8 +69,7 @@ export const useChat = (activeProject: string | null) => {
     return () => {
       timeouts.forEach(clearTimeout);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once
+  }, [addMessage]); // Run only once on mount; addMessage is stable
 
   // Effect to add the project prompt AFTER booting, if no project is active
   useEffect(() => {
