@@ -42,15 +42,6 @@ const CommandDeck = () => {
     'SYSTEM READY'
   ]
 
-  const asciiLogo = `
-    ██████╗ ██╗   ██╗██████╗  ██████╗
-   ██╔═══██╗██║   ██║██╔══██╗██╔═══██╗
-   ███████║██║   ██║██████╔╝███████║
-   ██╔═══██║██║   ██║██╔══██╗██╔═══██║
-   ██║   ██║╚██████╔╝██║  ██║██║   ██║
-   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝
-  `
-
   // System boot sequence when entering command deck
   useEffect(() => {
     if (!systemBooting) return
