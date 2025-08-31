@@ -1,4 +1,4 @@
-/* src/App.css - Improved layout with animations */
+/* src/App.css - Complete updated version with all new styles */
 .app-container {
   height: 100vh;
   display: flex;
@@ -159,6 +159,14 @@
   color: #9b59b6;
 }
 
+.system-message.user {
+  color: var(--accent-blue);
+}
+
+.system-message.aura {
+  color: var(--amber-primary);
+}
+
 .system-prefix {
   flex-shrink: 0;
   margin-right: 0.75rem;
@@ -260,10 +268,74 @@
   border-radius: 2px;
 }
 
-.task-item {
-  color: #666;
-  font-style: italic;
+.task-input {
+  width: 100%;
+  background-color: var(--ide-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-default);
+  padding: 8px;
+  font-family: var(--font-primary);
   font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.task-input:focus {
+  outline: none;
+  border-color: var(--amber-primary);
+  box-shadow: 0 0 5px var(--amber-glow);
+}
+
+.add-task-section {
+  margin-bottom: 2rem;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.8rem;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-status {
+  margin-right: 0.5rem;
+  width: 20px;
+  text-align: center;
+}
+
+.task-text {
+  flex: 1;
+}
+
+.task-delete {
+  background: none;
+  border: none;
+  color: var(--accent-red);
+  cursor: pointer;
+  padding: 0 0.5rem;
+  font-size: 1rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.task-delete:hover {
+  opacity: 1;
+}
+
+.task-item.completed {
+  opacity: 0.6;
+}
+
+.task-item.in_progress {
+  color: var(--amber-primary);
+}
+
+.task-item.failed {
+  color: var(--accent-red);
 }
 
 .add-task-button {
@@ -276,6 +348,7 @@
   font-family: var(--font-primary);
   transition: all 0.2s ease;
   font-size: 0.8rem;
+  width: 100%;
 }
 
 .add-task-button:hover:not(:disabled) {
@@ -405,6 +478,10 @@
   transition: all 0.2s ease;
 }
 
+.project-action.delete {
+  background: var(--accent-red);
+}
+
 .project-action:hover {
   filter: brightness(1.2);
 }
@@ -433,21 +510,6 @@
   font-weight: bold;
 }
 
-/* Task improvements */
-.task-item.completed {
-  opacity: 0.6;
-  text-decoration: line-through;
-}
-
-.task-status {
-  margin-right: 0.5rem;
-  color: var(--accent-green);
-}
-
-.task-text {
-  flex: 1;
-}
-
 /* Workspace placeholder */
 .workspace-panel {
   flex: 1;
@@ -463,18 +525,21 @@
   margin-bottom: 1rem;
 }
 
-/* User/Aura message styles */
-.system-message.user {
-  color: var(--accent-blue);
-}
-
-.system-message.aura {
-  color: var(--amber-primary);
-}
-
 /* Active button state */
 .header-button.active {
   background-color: var(--amber-primary);
   color: var(--ide-bg);
   border-color: var(--amber-primary);
+}
+
+/* Error messages */
+.error-message {
+  color: var(--accent-red);
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: rgba(244, 71, 71, 0.1);
+  border: 1px solid var(--accent-red);
+  border-radius: 2px;
 }
