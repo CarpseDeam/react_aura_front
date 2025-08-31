@@ -8,6 +8,20 @@ import { ChatInterface } from './components/chat/ChatInterface'
 import { TaskList } from './components/mission/TaskList'
 import { useChat } from './hooks/useChat'
 
+// Your beautiful ASCII logo component
+const AuraAsciiLogo = () => (
+  <pre className="boot-ascii-logo">
+    {`
+    █████╗ ██╗   ██╗██████╗  █████╗
+   ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+   ███████║██║   ██║██████╔╝███████║
+   ██╔══██║██║   ██║██╔══██╗██╔══██║
+   ██║  ██║╚██████╔╝██║  ██║██║  ██║
+   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+    `}
+  </pre>
+);
+
 // Command Deck Component (for authenticated users)
 const CommandDeck = () => {
   const [activeProject, setActiveProject] = useState<string | null>(null)
@@ -27,6 +41,15 @@ const CommandDeck = () => {
     'ESTABLISHING COMMAND LINK...',
     'SYSTEM READY'
   ]
+
+  const asciiLogo = `
+    ██████╗ ██╗   ██╗██████╗  ██████╗
+   ██╔═══██╗██║   ██║██╔══██╗██╔═══██╗
+   ███████║██║   ██║██████╔╝███████║
+   ██╔═══██║██║   ██║██╔══██╗██╔═══██║
+   ██║   ██║╚██████╔╝██║  ██║██║   ██║
+   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝
+  `
 
   // System boot sequence when entering command deck
   useEffect(() => {
@@ -53,7 +76,7 @@ const CommandDeck = () => {
       <div className={`boot-screen ${bootExiting ? 'exiting' : ''}`}>
         <div className="boot-content">
           <div className="aura-boot-logo">
-            <h1 className="aura-logo">AURA</h1>
+            <AuraAsciiLogo />
             <p className="tagline">AUTONOMOUS VIRTUAL MACHINE</p>
           </div>
           <div className="boot-messages">
