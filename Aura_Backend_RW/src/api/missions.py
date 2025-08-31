@@ -42,6 +42,16 @@ async def get_project_mission_log(
     return mission_log_service
 
 
+@router.get("/{project_name}/tasks", response_model=List[schemas.Task])
+async def get_mission_tasks(
+    project_name: str,
+    mission_log: MissionLogService = Depends(get_project_mission_log)
+):
+    """Retrieves all tasks for a project's mission log."""
+    # The dependency already loads the correct project log
+    return mission_log.get_tasks()
+
+
 @router.post("/{project_name}/tasks", status_code=status.HTTP_201_CREATED, response_model=schemas.Task)
 async def add_mission_task(
     project_name: str,

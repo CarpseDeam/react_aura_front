@@ -55,7 +55,7 @@ export const tasksApi = {
   },
 
   async dispatchMission(projectName: string) {
-    const response = await fetch(`${API_BASE_URL}/agent/dispatch`, {
+    const response = await fetch(`${API_BASE_URL}/agent/projects/dispatch`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ project_name: projectName })

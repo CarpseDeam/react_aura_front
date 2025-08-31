@@ -1,0 +1,15 @@
+{
+  "name": "aura-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root controller for the Aura project",
+  "scripts": {
+    "postinstall": "npm install --prefix aura-web-v2",
+    "dev:frontend": "npm run dev --prefix aura-web-v2",
+    "dev:backend": "cd Aura_Backend_RW && uvicorn src.main:app --reload --port 8080",
+    "dev": "concurrently --kill-others-on-fail \"npm:dev:frontend\" \"npm:dev:backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
