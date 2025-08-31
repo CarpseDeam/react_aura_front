@@ -1,7 +1,7 @@
 // src/components/modals/ProjectsModal.tsx
 import { useState } from 'react';
 import { useProjects } from '../../hooks/useProjects';
-import { projectsApi } from '../../services/api';
+import { projectsApi } from '../services/projects';
 
 interface ProjectsModalProps {
   onClose: () => void;

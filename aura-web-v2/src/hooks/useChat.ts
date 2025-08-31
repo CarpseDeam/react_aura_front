@@ -49,14 +49,12 @@ export const useChat = (activeProject: string | null) => {
     try {
       const response = await chatApi.sendPrompt(activeProject, userInput, conversationHistory);
 
+      const aiContent = response.message || 'Task received and processed.';
       // Add AI response to display
-      addMessage('aura', response.message || 'Task received and processed.', 'aura');
+      addMessage('aura', aiContent, 'aura');
 
       // Update conversation history
-      setConversationHistory(prev => [...prev, {
-        role: 'assistant' as const,
-        content: response.message || 'Task received and processed.'
-      }]);
+      setConversationHistory(prev => [...prev, { role: 'assistant', content: aiContent }]);
 
     } catch (error) {
       addMessage('system',
