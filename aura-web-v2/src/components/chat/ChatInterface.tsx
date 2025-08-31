@@ -23,8 +23,8 @@ export const ChatInterface = ({ activeProject, chat }: ChatInterfaceProps) => {
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isBooting || isProcessing) return;
-
+    // This check should mirror the button's disabled logic for consistency.
+    if (!inputValue.trim() || isBooting || isProcessing || !activeProject) return;
     const message = inputValue;
     setInputValue('');
     await sendMessage(message);

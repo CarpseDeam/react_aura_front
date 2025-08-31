@@ -1,5 +1,5 @@
 // src/hooks/useChat.ts
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { chatApi } from '../services/chat';
 import type { ChatMessage } from '../types/chat';
 export interface DisplayMessage {
