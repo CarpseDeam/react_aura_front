@@ -1,6 +1,6 @@
 // src/components/chat/ChatInterface.tsx
 import { useState, useRef, useEffect } from 'react';
-import { useChat, DisplayMessage } from '../../hooks/useChat';
+import { useChat, type DisplayMessage } from '../../hooks/useChat';
 
 interface ChatInterfaceProps {
   activeProject: string | null;
