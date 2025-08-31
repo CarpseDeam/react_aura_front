@@ -3,18 +3,22 @@ import { LoginModal } from './auth/LoginModal';
 import { RegisterModal } from './auth/RegisterModal';
 import './LandingPage.css';
 
-const AuraAsciiLogo = () => (
-  <pre className="aura-ascii-logo">
-    {`
-    █████╗ ██╗   ██╗██████╗  █████╗
-   ██╔══██╗██║   ██║██╔══██╗██╔══██╗
-   ███████║██║   ██║██████╔╝███████║
-   ██╔══██║██║   ██║██╔══██╗██╔══██║
-   ██║  ██║╚██████╔╝██║  ██║██║  ██║
-   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-    `}
-  </pre>
-);
+const AuraAsciiLogo = () => {
+  // This matches your beautiful design from image 2!
+  const asciiArt = `        █████╗ ██╗   ██╗██████╗  █████╗
+       ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+       ███████║██║   ██║██████╔╝███████║
+       ██╔══██║██║   ██║██╔══██╗██╔══██║
+       ██║  ██║╚██████╔╝██║  ██║██║  ██║
+       ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+   A U T O N O M O U S   V I R T U A L   M A C H I N E `;
+
+  return (
+    <pre className="aura-ascii-logo" aria-label="AURA Logo">
+      {asciiArt}
+    </pre>
+  );
+};
 
 const TAGLINES = [
   "Stop fixing trivial bugs.",
@@ -22,6 +26,7 @@ const TAGLINES = [
   "Delegate the details.",
   "Ship features, not fixes."
 ];
+
 const TYPING_SPEED = 100;
 const DELETING_SPEED = 50;
 const PAUSE_DURATION = 2000;
@@ -39,32 +44,23 @@ export const LandingPage = () => {
     const handleTyping = () => {
       const currentTagline = TAGLINES[taglineIndex];
 
-      // Determine if we are typing or deleting
       if (isDeleting) {
-        // Deleting logic
         setDisplayedText(currentTagline.substring(0, displayedText.length - 1));
       } else {
-        // Typing logic
         setDisplayedText(currentTagline.substring(0, displayedText.length + 1));
       }
 
-      // Logic to switch between typing, pausing, and deleting
       if (!isDeleting && displayedText === currentTagline) {
-        // Pause at the end of typing
         setTimeout(() => setIsDeleting(true), PAUSE_DURATION);
       } else if (isDeleting && displayedText === '') {
-        // Move to the next tagline after deleting
         setIsDeleting(false);
         setTaglineIndex((prevIndex) => (prevIndex + 1) % TAGLINES.length);
       }
     };
 
     const typingTimeout = setTimeout(handleTyping, isDeleting ? DELETING_SPEED : TYPING_SPEED);
-
-    // Cleanup timeout on component unmount or re-render
     return () => clearTimeout(typingTimeout);
   }, [displayedText, isDeleting, taglineIndex]);
-
 
   return (
     <div className="landing-page">
@@ -136,7 +132,7 @@ export const LandingPage = () => {
           <div className="hero-cta">
             <button
               className="launch-button"
-              onClick={() => setShowRegisterModal(true)}
+              onClick={() => setShowLoginModal(true)}
             >
               LAUNCH AURA
             </button>

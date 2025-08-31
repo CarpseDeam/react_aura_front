@@ -1,9 +1,4 @@
-/* Command Deck Styles */
-.app-container {
-  width: 100vw;
-  height: 100vh;
-  background: #0a0a0a;
-  color: #00/* Updated App.css with Landing Page and Auth Support */
+/* Updated App.css with Landing Page and Auth Support */
 #root {
   max-width: 100vw;
   margin: 0 auto;
@@ -23,8 +18,8 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  color: #0ff;
-  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  color: #f4b942;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
   animation: bootScreenEntry 0.5s ease-out;
 }
 
@@ -74,32 +69,35 @@
   margin-bottom: 3rem;
 }
 
-.aura-boot-logo .aura-logo {
-  font-size: 4rem;
-  font-weight: 900;
-  color: #0ff;
+.boot-ascii-logo {
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+  color: #f4b942;
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
+  line-height: 1.1;
   text-shadow:
-    0 0 10px #0ff,
-    0 0 20px #0ff,
-    0 0 30px #0ff,
-    0 0 40px #00cccc,
-    0 1px 0 #008888,
-    0 2px 0 #008888,
-    0 3px 0 #008888;
-  letter-spacing: 0.3em;
+    0 0 10px rgba(244, 185, 66, 0.4),
+    0 0 20px rgba(244, 185, 66, 0.3),
+    0 0 30px rgba(244, 185, 66, 0.2);
   margin: 0;
-  line-height: 1;
-  animation: logoGlow 2s ease-in-out infinite alternate;
+  white-space: pre;
+  font-weight: 600;
+  animation: logoGlow 3s ease-in-out infinite alternate;
+  font-feature-settings: "liga" 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @keyframes logoGlow {
   from {
-    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
-    transform: scale(1);
+    text-shadow:
+      0 0 10px rgba(244, 185, 66, 0.4),
+      0 0 20px rgba(244, 185, 66, 0.3);
   }
   to {
-    text-shadow: 0 0 20px #0ff, 0 0 30px #0ff, 0 0 40px #0ff, 0 0 50px #00cccc;
-    transform: scale(1.02);
+    text-shadow:
+      0 0 20px rgba(244, 185, 66, 0.6),
+      0 0 30px rgba(244, 185, 66, 0.4),
+      0 0 40px rgba(244, 185, 66, 0.2);
   }
 }
 
@@ -134,7 +132,7 @@
 }
 
 .boot-message.active {
-  color: #0ff;
+  color: #f4b942;
   opacity: 1;
   animation: messageFlash 1s ease-in-out infinite alternate;
 }
@@ -178,8 +176,8 @@
   width: 100vw;
   height: 100vh;
   background: #0f0f0f;
-  color: #0ff;
-  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  color: #f4b942;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -188,7 +186,7 @@
 
 .mainframe-header {
   background: #1a1a1a;
-  border-bottom: 1px solid #0ff;
+  border-bottom: 1px solid #f4b942;
   padding: 8px 16px;
   display: flex;
   justify-content: space-between;
@@ -204,7 +202,7 @@
 }
 
 .header-title {
-  color: #0ff;
+  color: #f4b942;
   font-weight: bold;
   font-size: 16px;
   letter-spacing: 1px;
@@ -216,7 +214,7 @@
 }
 
 .active-project-display .label {
-  color: #0ff;
+  color: #f4b942;
 }
 
 .header-right {
@@ -235,8 +233,8 @@
 
 .header-button {
   background: transparent;
-  border: 1px solid #0ff;
-  color: #0ff;
+  border: 1px solid #f4b942;
+  color: #f4b942;
   padding: 4px 12px;
   cursor: pointer;
   font-family: inherit;
@@ -246,11 +244,11 @@
 }
 
 .header-button:hover {
-  background: rgba(0, 255, 255, 0.1);
+  background: rgba(244, 185, 66, 0.1);
 }
 
 .header-button.active {
-  background: #0ff;
+  background: #f4b942;
   color: #0f0f0f;
 }
 
@@ -277,7 +275,7 @@
 
 .left-panel {
   width: 300px;
-  border-right: 1px solid #0ff;
+  border-right: 1px solid #f4b942;
   background: #111;
   flex-shrink: 0;
 }
@@ -298,110 +296,29 @@
 
 .workspace-placeholder {
   text-align: center;
-  color: #666;
+  color: #888;
 }
 
 .workspace-placeholder h2 {
-  color: #0ff;
-  margin-bottom: 16px;
-}
-
-/* Modal Styles */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #1a1a1a;
-  border: 1px solid #0ff;
-  border-radius: 4px;
-  padding: 24px;
-  min-width: 400px;
-  max-width: 80vw;
-  max-height: 80vh;
-  overflow-y: auto;
-  position: relative;
-}
-
-.modal-close {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  background: none;
-  border: none;
-  color: #0ff;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-close:hover {
-  background: rgba(0, 255, 255, 0.1);
-}
-
-.modal-content h3 {
-  color: #0ff;
-  margin: 0 0 16px;
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-/* Settings Modal */
-.settings-section {
-  margin-bottom: 24px;
-}
-
-.settings-section h4 {
-  color: #0ff;
-  margin: 0 0 12px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.settings-section p {
-  color: #ccc;
-  margin: 8px 0;
-  line-height: 1.4;
+  color: #f4b942;
+  margin-bottom: 1rem;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .command-deck {
-    flex-direction: column;
+  .boot-ascii-logo {
+    font-size: clamp(0.5rem, 4vw, 0.8rem);
   }
 
   .left-panel {
-    width: 100%;
-    height: 200px;
-    border-right: none;
-    border-bottom: 1px solid #0ff;
+    width: 250px;
+  }
+
+  .header-left {
+    gap: 12px;
   }
 
   .header-right {
     gap: 8px;
-  }
-
-  .header-button {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-
-  .user-info {
-    display: none;
   }
 }
