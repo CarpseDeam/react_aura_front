@@ -2,14 +2,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { useChat, type DisplayMessage } from '../../hooks/useChat';
 
+// Get the return type of the hook to properly type the 'chat' prop
+type ChatHookReturn = ReturnType<typeof useChat>;
+
 interface ChatInterfaceProps {
   activeProject: string | null;
-  isBooting: boolean;
+  chat: ChatHookReturn;
 }
 
-export const ChatInterface = ({ activeProject, isBooting }: ChatInterfaceProps) => {
+export const ChatInterface = ({ activeProject, chat }: ChatInterfaceProps) => {
   const [inputValue, setInputValue] = useState('');
-  const { messages, isProcessing, sendMessage, addMessage } = useChat(activeProject);
+  const { messages, isProcessing, isBooting, sendMessage } = chat;
   const logRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
@@ -33,13 +36,6 @@ export const ChatInterface = ({ activeProject, isBooting }: ChatInterfaceProps) 
       handleSendMessage();
     }
   };
-
-  // Add system messages for various states
-  useEffect(() => {
-    if (!activeProject && messages.length === 0) {
-      addMessage('system', 'No active project. Please create or load a project to begin.', 'info');
-    }
-  }, [activeProject, messages.length, addMessage]);
 
   return (
     <>
