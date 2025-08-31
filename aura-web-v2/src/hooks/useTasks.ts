@@ -1,27 +1,6 @@
-// src/hooks/useTasks.ts
 import { useState, useEffect, useCallback } from 'react';
 import { tasksApi } from '../services/tasks';
-
-// This is the shape of the data coming from the backend API
-export interface ApiTask {
-  id: number;
-  description: string;
-  done: boolean;
-  last_error: string | null;
-}
-
-// This is the shape we want to use in our components
-export interface Task {
-  id: number;
-  description: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'failed';
-}
-
-const transformApiTask = (apiTask: ApiTask): Task => ({
-  id: apiTask.id,
-  description: apiTask.description,
-  status: apiTask.done ? 'completed' : (apiTask.last_error ? 'failed' : 'pending'),
-});
+import type { Task } from '../types/task';
 
 export const useTasks = (activeProject: string | null) => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -39,9 +18,8 @@ export const useTasks = (activeProject: string | null) => {
     setError('');
 
     try {
-      const apiTasks: ApiTask[] = await tasksApi.getTasks(activeProject);
-      const transformedTasks = apiTasks.map(transformApiTask);
-      setTasks(transformedTasks);
+      const taskData = await tasksApi.getTasks(activeProject);
+      setTasks(taskData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tasks');
       setTasks([]);
@@ -50,59 +28,62 @@ export const useTasks = (activeProject: string | null) => {
     }
   }, [activeProject]);
 
-  const addTask = useCallback(async (description: string) => {
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
+  const addTask = async (description: string) => {
     if (!activeProject) return;
 
     try {
-      const newTaskFromApi: ApiTask = await tasksApi.addTask(activeProject, description);
-      setTasks(prevTasks => [...prevTasks, transformApiTask(newTaskFromApi)]);
+      const newTask = await tasksApi.addTask(activeProject, description);
+      setTasks(prev => [...prev, newTask]);
+      setError('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add task');
     }
-  }, [activeProject]);
+  };
 
-  const updateTask = useCallback(async (taskId: number, description: string) => {
+  const updateTask = async (taskId: number, description: string) => {
     if (!activeProject) return;
 
     try {
-      const updatedTaskFromApi: ApiTask = await tasksApi.updateTask(activeProject, taskId.toString(), description);
-      setTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? transformApiTask(updatedTaskFromApi) : task)));
+      const updatedTask = await tasksApi.updateTask(activeProject, taskId.toString(), description);
+      setTasks(prev => prev.map(task =>
+        task.id === taskId ? updatedTask : task
+      ));
+      setError('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update task');
     }
-  }, [activeProject]);
+  };
 
-  const deleteTask = useCallback(async (taskId: number) => {
+  const deleteTask = async (taskId: number) => {
     if (!activeProject) return;
 
     try {
       await tasksApi.deleteTask(activeProject, taskId.toString());
-      setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+      setTasks(prev => prev.filter(task => task.id !== taskId));
+      setError('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete task');
     }
-  }, [activeProject]);
+  };
 
-  const dispatchMission = useCallback(async () => {
-    if (!activeProject || dispatching) return;
+  const dispatchMission = async () => {
+    if (!activeProject) return;
 
     setDispatching(true);
     setError('');
 
     try {
       await tasksApi.dispatchMission(activeProject);
-      await loadTasks(); // Reload tasks to see status updates
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to dispatch mission');
     } finally {
       setDispatching(false);
     }
-  }, [activeProject, dispatching, loadTasks]);
-
-  // Load tasks when active project changes
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+  };
 
   return {
     tasks,
@@ -113,6 +94,6 @@ export const useTasks = (activeProject: string | null) => {
     updateTask,
     deleteTask,
     dispatchMission,
-    loadTasks
+    refetch: loadTasks
   };
 };

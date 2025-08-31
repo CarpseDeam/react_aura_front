@@ -1,0 +1,211 @@
+/* Task List Styles */
+.mission-control-panel {
+  padding: 1rem;
+  background: #111;
+  color: #0ff;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mission-control-panel h3 {
+  color: #0ff;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0 0 1rem;
+  letter-spacing: 1px;
+}
+
+.mission-control-panel h4 {
+  color: #0ff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem;
+  opacity: 0.8;
+}
+
+.task-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-list {
+  flex: 1;
+  margin-bottom: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.task-item {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 2px;
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  font-size: 0.8rem;
+  color: #ccc;
+  transition: all 0.2s ease;
+}
+
+.task-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.task-item:hover {
+  border-color: #0ff;
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.task-display-mode {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-description {
+  flex: 1;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.task-description:hover {
+  color: #0ff;
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+.task-edit-btn,
+.task-delete-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.task-edit-btn:hover {
+  color: #0ff;
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.task-delete-btn:hover {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.task-edit-input {
+  background: #333;
+  border: 1px solid #0ff;
+  color: #fff;
+  padding: 4px;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.8rem;
+  border-radius: 2px;
+}
+
+.task-edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 255, 255, 0.3);
+}
+
+.add-task-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.task-input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #ccc;
+  padding: 0.5rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.task-input:focus {
+  outline: none;
+  border-color: #0ff;
+  box-shadow: 0 0 4px rgba(0, 255, 255, 0.2);
+}
+
+.task-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.add-task-button {
+  background: transparent;
+  border: 1px solid #0ff;
+  color: #0ff;
+  padding: 0.5rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.add-task-button:hover:not(:disabled) {
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.add-task-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dispatch-button {
+  background: transparent;
+  border: 2px solid #0ff;
+  color: #0ff;
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  letter-spacing: 1px;
+}
+
+.dispatch-button:hover:not(:disabled) {
+  background: rgba(0, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.dispatch-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+  padding: 0.5rem;
+  border-radius: 2px;
+  font-size: 0.8rem;
+}

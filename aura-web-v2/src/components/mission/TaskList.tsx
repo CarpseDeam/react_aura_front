@@ -1,6 +1,7 @@
-// src/components/mission/TaskList.tsx
 import { useState } from 'react';
 import { useTasks } from '../../hooks/useTasks';
+import { TaskItem } from './TaskItem';
+import './TaskList.css';
 
 interface TaskListProps {
   activeProject: string | null;
@@ -15,6 +16,7 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
     error,
     dispatching,
     addTask,
+    updateTask,
     deleteTask,
     dispatchMission
   } = useTasks(activeProject);
@@ -64,6 +66,7 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
                 key={task.id}
                 task={task}
                 onDelete={() => deleteTask(task.id)}
+                onUpdate={(description) => updateTask(task.id, description)}
               />
             ))
           )}
@@ -94,40 +97,7 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
         onClick={handleDispatch}
         disabled={isBooting || !activeProject || dispatching || tasks.length === 0}
       >
-        {dispatching ? 'DISPATCHING...' : 'DISPATCH AURA'}
-      </button>
-    </div>
-  );
-};
-
-// Individual Task Item Component
-interface TaskItemProps {
-  task: { id: string; description: string; status: string };
-  onDelete: () => void;
-}
-
-const TaskItem = ({ task, onDelete }: TaskItemProps) => {
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed': return '✓';
-      case 'in_progress': return '⏳';
-      case 'failed': return '❌';
-      default: return '○';
-    }
-  };
-
-  return (
-    <div className={`task-item ${task.status}`}>
-      <span className="task-status">
-        {getStatusIcon(task.status)}
-      </span>
-      <span className="task-text">{task.description}</span>
-      <button
-        className="task-delete"
-        onClick={onDelete}
-        title="Delete task"
-      >
-        ×
+        {dispatching ? 'EXECUTING MISSION...' : 'DISPATCH MISSION'}
       </button>
     </div>
   );

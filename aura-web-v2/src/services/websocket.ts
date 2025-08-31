@@ -16,7 +16,7 @@ export class WebSocketService {
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
-  private heartbeatInterval: NodeJS.Timeout | null = null;
+  private heartbeatInterval: number | null = null;
   private eventHandlers: Map<string, WebSocketEventHandler[]> = new Map();
 
   connect(): Promise<void> {

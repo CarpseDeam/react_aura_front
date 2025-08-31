@@ -1,4 +1,3 @@
-// src/services/chat.ts
 import { API_BASE_URL, getAuthHeaders } from './api';
 import type { ChatMessage } from '../types/chat';
 

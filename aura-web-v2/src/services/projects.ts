@@ -31,5 +31,11 @@ export const projectsApi = {
     if (!response.ok) {
       throw new Error(`Failed to delete project: ${response.status}`);
     }
+  },
+
+  async load(projectName: string) {
+    // This method loads/activates a project - for now just return success
+    // The actual project loading happens when we make API calls with the project name
+    return Promise.resolve({ message: `Project ${projectName} loaded` });
   }
 };
