@@ -1,6 +1,6 @@
 // src/hooks/useProjects.ts
 import { useState, useEffect } from 'react';
-import { projectsApi } from '../services/api';
+import { projectsApi } from '../services/projects';
 
 export const useProjects = () => {
   const [projects, setProjects] = useState<string[]>([]);
@@ -11,7 +11,7 @@ export const useProjects = () => {
     setLoading(true);
     setError('');
     try {
-      const data = await projectsApi.list();
+      const data = await projectsApi.getProjects();
       setProjects(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load projects');
@@ -29,13 +29,13 @@ export const useProjects = () => {
       throw new Error('Please enter a valid project name');
     }
 
-    await projectsApi.create(sanitizedName);
+    await projectsApi.createProject(sanitizedName);
     await loadProjects();
     return sanitizedName;
   };
 
   const deleteProject = async (name: string) => {
-    await projectsApi.delete(name);
+    await projectsApi.deleteProject(name);
     await loadProjects();
   };
 

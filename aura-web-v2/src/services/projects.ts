@@ -13,7 +13,7 @@ export const projectsApi = {
   },
 
   async createProject(projectName: string) {
-    const response = await fetch(`${API_OPI_BASE_URL}/api/missions`, {
+    const response = await fetch(`${API_BASE_URL}/api/missions`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ project_name: projectName })
