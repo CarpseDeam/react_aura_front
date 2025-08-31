@@ -1,3 +1,4 @@
+// src/services/websocket.ts
 import { getToken } from './auth';
 
 import { API_BASE_URL } from './api';
@@ -97,7 +98,7 @@ export class WebSocketService {
   }
 
   private startHeartbeat(): void {
-    this.heartbeatInterval = setInterval(() => {
+    this.heartbeatInterval = window.setInterval(() => {
       if (this.isConnected()) {
         this.ws!.send(JSON.stringify({ type: 'ping' }));
       }
@@ -148,7 +149,8 @@ let webSocketService: WebSocketService | null = null;
 
 export const getWebSocketService = (): WebSocketService => {
   if (!webSocketService) {
-    webSocketService = new WebSocketService(API_BASE_URL);
+    webSocketService = new WebSocketService();
   }
   return webSocketService;
 };
+

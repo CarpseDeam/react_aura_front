@@ -1,3 +1,3 @@
-// src/components/index.ts
-export { ProjectsModal } from './modals/ProjectsModal';
-export { SettingsModal } from './modals/SettingsModal';
+// src/components/modals/index.ts
+export { ProjectsModal } from './ProjectsModal';
+export { SettingsModal } from './SettingsModal';
