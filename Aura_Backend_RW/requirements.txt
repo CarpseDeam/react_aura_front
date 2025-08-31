@@ -5,7 +5,7 @@ aiohttp
 SQLAlchemy
 # --- THE FIX: Using a version known for broad wheel support ---
 # --- THE FIX: Switched to the modern psycopg3 which has better binary wheel support ---
-psycopg[binary]
+psycopg2-binary
 passlib==1.7.4
 bcrypt==4.0.1
 python-jose[cryptography]
