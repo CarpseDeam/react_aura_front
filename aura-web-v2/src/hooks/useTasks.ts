@@ -1,6 +1,6 @@
 // src/hooks/useTasks.ts
 import { useState, useEffect, useCallback } from 'react';
-import { tasksApi } from '../services/chat';
+import { tasksApi } from '../services/tasks';
 
 export interface Task {
   id: string;
@@ -39,34 +39,34 @@ export const useTasks = (activeProject: string | null) => {
     if (!activeProject) return;
 
     try {
-      await tasksApi.addTask(activeProject, description);
-      await loadTasks(); // Reload tasks after adding
+      const newTask = await tasksApi.addTask(activeProject, description);
+      setTasks(prevTasks => [...prevTasks, newTask]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add task');
     }
-  }, [activeProject, loadTasks]);
+  }, [activeProject]);
 
   const updateTask = useCallback(async (taskId: string, description: string) => {
     if (!activeProject) return;
 
     try {
-      await tasksApi.updateTask(activeProject, taskId, description);
-      await loadTasks(); // Reload tasks after updating
+      const updatedTask = await tasksApi.updateTask(activeProject, taskId, description);
+      setTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? updatedTask : task)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update task');
     }
-  }, [activeProject, loadTasks]);
+  }, [activeProject]);
 
   const deleteTask = useCallback(async (taskId: string) => {
     if (!activeProject) return;
 
     try {
       await tasksApi.deleteTask(activeProject, taskId);
-      await loadTasks(); // Reload tasks after deleting
+      setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete task');
     }
-  }, [activeProject, loadTasks]);
+  }, [activeProject]);
 
   const dispatchMission = useCallback(async () => {
     if (!activeProject || dispatching) return;
