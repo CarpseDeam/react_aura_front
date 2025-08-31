@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { chatApi } from '../services/chat';
 import type { ChatMessage } from '../types/chat';
+
 export interface DisplayMessage {
   id: string;
   sender: string;
@@ -11,12 +12,13 @@ export interface DisplayMessage {
 }
 
 const AURA_BANNER = `
-        █████╗ ██╗   ██╗██████╗  █████╗
-       ██╔══██╗██║   ██║██╔══██╗██╔══██╗
-       ███████║██║   ██║██████╔╝███████║
-       ██╔══██║██║   ██║██╔══██╗██╔══██║
-       ██║  ██║╚██████╔╝██║  ██║██║  ██║
-       ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+ █████╗ ██╗   ██╗██████╗  █████╗
+██╔══██╗██║   ██║██╔══██╗██╔══██╗
+███████║██║   ██║██████╔╝███████║
+██╔══██║██║   ██║██╔══██╗██╔══██║
+██║  ██║╚██████╔╝██║  ██║██║  ██║
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+
    A U T O N O M O U S   V I R T U A L   M A C H I N E
 `;
 
@@ -35,108 +37,101 @@ export const useChat = (activeProject: string | null) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ChatMessage[]>([]);
   const [isBooting, setIsBooting] = useState(true);
-  // Use a ref to track the processing state without causing the sendMessage callback to be recreated.
-  const isProcessingRef = useRef(isProcessing);
-  isProcessingRef.current = isProcessing;
+  const isProcessingRef = useRef(false);
 
-  const addMessage = useCallback((
-    sender: DisplayMessage['sender'],
-    content: string,
-    type: DisplayMessage['type']
-  ) => {
-    const message: DisplayMessage = {
-      id: crypto.randomUUID(),
-      sender,
-      content,
-      type,
-      timestamp: Date.now()
-    };
-    setMessages(prev => [...prev, message]);
-    return message;
-  }, []);
-
-  // Effect to run the bootup animation on initial mount
+  // Boot sequence effect
   useEffect(() => {
-    setMessages([]);
-    setIsBooting(true);
-    const timeouts: ReturnType<typeof setTimeout>[] = [];
-    let messageIndex = 0;
+    if (activeProject) {
+      setIsBooting(true);
+      setMessages([]);
 
-    const showNextMessage = () => {
-      if (messageIndex < BOOT_SEQUENCE.length) {
-        const msg = BOOT_SEQUENCE[messageIndex];
-        addMessage(msg.sender, msg.content, msg.type);
-        messageIndex++;
+      BOOT_SEQUENCE.forEach((message, index) => {
+        const totalDelay = BOOT_SEQUENCE.slice(0, index).reduce((acc, msg) => acc + msg.delay, 0);
 
-        if (messageIndex < BOOT_SEQUENCE.length) {
-          timeouts.push(setTimeout(showNextMessage, msg.delay));
-        } else {
-          // After last message, wait its delay then stop booting
-          timeouts.push(setTimeout(() => setIsBooting(false), msg.delay));
-        }
-      }
-    };
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: `boot-${index}`,
+            sender: message.sender,
+            content: message.content,
+            type: message.type,
+            timestamp: Date.now()
+          }]);
 
-    timeouts.push(setTimeout(showNextMessage, 300));
-
-    return () => {
-      timeouts.forEach(clearTimeout);
-    };
-  }, [addMessage]); // Run only once on mount; addMessage is stable
-
-  // Effect to add the project prompt AFTER booting, if no project is active
-  useEffect(() => {
-    // This effect should only run when the booting status or active project changes.
-    // By removing `messages` from the dependency array, we prevent this from re-running
-    // on every new message, making it more efficient and predictable.
-    if (isBooting === false && activeProject === null) {
-      addMessage('SYSTEM', PROJECT_PROMPT, 'info');
+          if (index === BOOT_SEQUENCE.length - 1) {
+            setTimeout(() => {
+              setIsBooting(false);
+              setMessages(prev => [...prev, {
+                id: 'project-prompt',
+                sender: 'AURA',
+                content: PROJECT_PROMPT,
+                type: 'info',
+                timestamp: Date.now()
+              }]);
+            }, 1000);
+          }
+        }, totalDelay);
+      });
     }
-  }, [isBooting, activeProject, addMessage]);
+  }, [activeProject]);
 
-  const sendMessage = useCallback(async (userInput: string) => {
-    if (!activeProject || !userInput.trim() || isProcessingRef.current) {
-      return;
-    }
+  const sendMessage = useCallback(async (content: string) => {
+    if (isProcessingRef.current || !activeProject) return;
 
-    addMessage('user', userInput, 'user');
-
-    const userMessage: ChatMessage = { role: 'user', content: userInput };
-    const historyForApi = [...conversationHistory, userMessage];
-
+    isProcessingRef.current = true;
     setIsProcessing(true);
 
+    // Add user message
+    const userMessage: DisplayMessage = {
+      id: Date.now().toString(),
+      sender: 'USER',
+      content,
+      type: 'user',
+      timestamp: Date.now()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+
     try {
-      const response = await chatApi.sendPrompt(activeProject, userInput, historyForApi);
+      // Add to conversation history
+      const newMessage: ChatMessage = { role: 'user', content };
+      const updatedHistory = [...conversationHistory, newMessage];
+      setConversationHistory(updatedHistory);
 
-      const aiContent = response.message || 'Task received and processed.';
-      addMessage('aura', aiContent, 'aura');
+      // Call chat API
+      const response = await chatApi.sendMessage(activeProject, updatedHistory);
 
-      const assistantMessage: ChatMessage = { role: 'assistant', content: aiContent };
-      setConversationHistory([...historyForApi, assistantMessage]);
+      // Add assistant response
+      const assistantMessage: DisplayMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: 'AURA',
+        content: response.content,
+        type: response.type || 'aura',
+        timestamp: Date.now()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      setConversationHistory([...updatedHistory, { role: 'assistant', content: response.content }]);
+
     } catch (error) {
-      addMessage('system',
-        `Error: ${error instanceof Error ? error.message : 'Failed to send message'}`,
-        'error'
-      );
-      // On error, still update history with the user's message so it's not lost
-      setConversationHistory(historyForApi);
+      console.error('Chat error:', error);
+      const errorMessage: DisplayMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: 'SYSTEM',
+        content: 'Error communicating with AURA. Please try again.',
+        type: 'error',
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
+      isProcessingRef.current = false;
       setIsProcessing(false);
     }
-  }, [activeProject, conversationHistory, addMessage]);
-
-  const clearMessages = useCallback(() => {
-    setMessages([]);
-    setConversationHistory([]);
-  }, []);
+  }, [activeProject, conversationHistory]);
 
   return {
     messages,
     isProcessing,
     isBooting,
-    sendMessage,
-    addMessage,
-    clearMessages
+    sendMessage
   };
 };

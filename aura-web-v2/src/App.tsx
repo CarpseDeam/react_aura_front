@@ -8,16 +8,16 @@ import { ChatInterface } from './components/chat/ChatInterface'
 import { TaskList } from './components/mission/TaskList'
 import { useChat } from './hooks/useChat'
 
-// Your beautiful ASCII logo component
+// Fixed ASCII Art - AURA with proper spelling and outlined style
 const AuraAsciiLogo = () => (
   <pre className="boot-ascii-logo">
     {`
-    █████╗ ██╗   ██╗██████╗  █████╗
-   ██╔══██╗██║   ██║██╔══██╗██╔══██╗
-   ███████║██║   ██║██████╔╝███████║
-   ██╔══██║██║   ██║██╔══██╗██╔══██║
-   ██║  ██║╚██████╔╝██║  ██║██║  ██║
-   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+ █████╗ ██╗   ██╗██████╗  █████╗
+██╔══██╗██║   ██║██╔══██╗██╔══██╗
+███████║██║   ██║██████╔╝███████║
+██╔══██║██║   ██║██╔══██╗██╔══██║
+██║  ██║╚██████╔╝██║  ██║██║  ██║
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
     `}
   </pre>
 );
@@ -52,7 +52,7 @@ const CommandDeck = () => {
 
     const finishBoot = setTimeout(() => {
       setBootExiting(true)
-      setTimeout(() => setSystemBooting(false), 500) // Time for exit animation
+      setTimeout(() => setSystemBooting(false), 500)
     }, bootMessages.length * 600 + 800)
 
     return () => {
@@ -141,20 +141,20 @@ const CommandDeck = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main Content - FIXED LAYOUT: Chat on left, Mission Control on right */}
       <div className="main-content">
         {!showWorkspace ? (
           <div className="command-deck">
             <div className="left-panel">
-              <TaskList
-                activeProject={activeProject}
-                isBooting={chat.isBooting}
-              />
-            </div>
-            <div className="right-panel">
               <ChatInterface
                 activeProject={activeProject}
                 chat={chat}
+              />
+            </div>
+            <div className="right-panel">
+              <TaskList
+                activeProject={activeProject}
+                isBooting={chat.isBooting}
               />
             </div>
           </div>
