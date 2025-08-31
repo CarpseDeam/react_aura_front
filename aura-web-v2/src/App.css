@@ -1,4 +1,4 @@
-/* Updated App.css with Landing Page and Auth Support */
+/* Updated App.css with Aura Amber Theme */
 #root {
   max-width: 100vw;
   margin: 0 auto;
@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  color: #0ff;
+  color: #f4b942;
   font-family: 'JetBrains Mono', 'Consolas', monospace;
   animation: bootScreenEntry 0.5s ease-out;
 }
@@ -72,15 +72,15 @@
 .aura-boot-logo .aura-logo {
   font-size: 4rem;
   font-weight: 900;
-  color: #0ff;
+  color: #f4b942;
   text-shadow:
-    0 0 10px #0ff,
-    0 0 20px #0ff,
-    0 0 30px #0ff,
-    0 0 40px #00cccc,
-    0 1px 0 #008888,
-    0 2px 0 #008888,
-    0 3px 0 #008888;
+    0 0 10px #f4b942,
+    0 0 20px #f4b942,
+    0 0 30px #f4b942,
+    0 0 40px #c39035,
+    0 1px 0 #a07020,
+    0 2px 0 #a07020,
+    0 3px 0 #a07020;
   letter-spacing: 0.3em;
   margin: 0;
   line-height: 1;
@@ -89,11 +89,11 @@
 
 @keyframes logoGlow {
   from {
-    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+    text-shadow: 0 0 10px #f4b942, 0 0 20px #f4b942, 0 0 30px #f4b942;
     transform: scale(1);
   }
   to {
-    text-shadow: 0 0 20px #0ff, 0 0 30px #0ff, 0 0 40px #0ff, 0 0 50px #00cccc;
+    text-shadow: 0 0 20px #f4b942, 0 0 30px #f4b942, 0 0 40px #f4b942, 0 0 50px #c39035;
     transform: scale(1.02);
   }
 }
@@ -128,7 +128,7 @@
 }
 
 .boot-message.active {
-  color: #0ff;
+  color: #f4b942;
   opacity: 1;
   animation: messageFlash 1s ease-in-out infinite alternate;
 }
@@ -172,7 +172,7 @@
   width: 100vw;
   height: 100vh;
   background: #0f0f0f;
-  color: #0ff;
+  color: #f4b942;
   font-family: 'JetBrains Mono', 'Consolas', monospace;
   font-size: 14px;
   display: flex;
@@ -182,7 +182,7 @@
 
 .mainframe-header {
   background: #1a1a1a;
-  border-bottom: 1px solid #0ff;
+  border-bottom: 1px solid #f4b942;
   padding: 8px 16px;
   display: flex;
   justify-content: space-between;
@@ -198,7 +198,7 @@
 }
 
 .header-title {
-  color: #0ff;
+  color: #f4b942;
   font-weight: bold;
   font-size: 16px;
   letter-spacing: 1px;
@@ -210,7 +210,7 @@
 }
 
 .active-project-display .label {
-  color: #0ff;
+  color: #f4b942;
 }
 
 .header-right {
@@ -229,8 +229,8 @@
 
 .header-button {
   background: transparent;
-  border: 1px solid #0ff;
-  color: #0ff;
+  border: 1px solid #f4b942;
+  color: #f4b942;
   padding: 4px 12px;
   cursor: pointer;
   font-family: inherit;
@@ -240,11 +240,11 @@
 }
 
 .header-button:hover {
-  background: rgba(0, 255, 255, 0.1);
+  background: rgba(244, 185, 66, 0.1);
 }
 
 .header-button.active {
-  background: #0ff;
+  background: #f4b942;
   color: #0f0f0f;
 }
 
@@ -267,11 +267,12 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: row-reverse;
 }
 
 .left-panel {
   width: 300px;
-  border-right: 1px solid #0ff;
+  border-left: 1px solid #f4b942;
   background: #111;
   flex-shrink: 0;
 }
@@ -279,7 +280,7 @@
 .right-panel {
   flex: 1;
   display: flex;
-  flex-direction: column-reverse; /* This will be corrected */
+  flex-direction: column;
 }
 
 .workspace-view {
@@ -296,7 +297,7 @@
 }
 
 .workspace-placeholder h2 {
-  color: #0ff;
+  color: #f4b942;
   margin-bottom: 16px;
 }
 
@@ -309,11 +310,11 @@
   flex-direction: column;
   gap: 12px;
   scrollbar-width: thin;
-  scrollbar-color: #0ff #1a1a1a;
+  scrollbar-color: #f4b942 #1a1a1a;
 }
 
 .prompt-area {
-  border-top: 1px solid #0ff;
+  border-top: 1px solid #f4b942;
   padding: 12px;
   background: #1a1a1a;
   display: flex;
@@ -321,7 +322,7 @@
 }
 
 .prompt-prefix {
-  color: #0ff;
+  color: #f4b942;
   margin-right: 8px;
   font-weight: bold;
 }
@@ -341,7 +342,7 @@
 }
 
 .send-button {
-  background: #0ff;
+  background: #f4b942;
   color: #0f0f0f;
   border: none;
   padding: 8px 16px;
@@ -370,7 +371,7 @@
 }
 
 .system-message.user .system-prefix {
-  color: #0ff; /* User Cyan */
+  color: #f4b942; /* User messages also in Amber */
 }
 
 .system-text {
@@ -381,7 +382,7 @@
 
 .cursor-blink {
   animation: blink 1s step-end infinite;
-  color: #0ff;
+  color: #f4b942;
 }
 
 @keyframes blink {
@@ -406,7 +407,7 @@
 
 .modal-content {
   background: #1a1a1a;
-  border: 1px solid #0ff;
+  border: 1px solid #f4b942;
   border-radius: 4px;
   padding: 24px;
   min-width: 400px;
@@ -422,7 +423,7 @@
   right: 12px;
   background: none;
   border: none;
-  color: #0ff;
+  color: #f4b942;
   font-size: 20px;
   cursor: pointer;
   padding: 0;
@@ -434,11 +435,11 @@
 }
 
 .modal-close:hover {
-  background: rgba(0, 255, 255, 0.1);
+  background: rgba(244, 185, 66, 0.1);
 }
 
 .modal-content h3 {
-  color: #0ff;
+  color: #f4b942;
   margin: 0 0 16px;
   font-size: 18px;
   font-weight: bold;
@@ -451,7 +452,7 @@
 }
 
 .settings-section h4 {
-  color: #0ff;
+  color: #f4b942;
   margin: 0 0 12px;
   font-size: 14px;
   font-weight: bold;
@@ -472,12 +473,12 @@
   .left-panel {
     width: 100%;
     height: 200px;
-    border-right: none;
-    border-bottom: 1px solid #0ff;
+    border-left: none;
+    border-bottom: 1px solid #f4b942;
   }
 
   .right-panel {
-    flex-direction: column; /* Correct for mobile */
+    flex-direction: column;
   }
 
   .header-right {
