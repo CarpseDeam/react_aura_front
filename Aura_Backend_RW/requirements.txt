@@ -1,0 +1,24 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+aiohttp
+SQLAlchemy
+# --- THE FIX: Using a version known for broad wheel support ---
+psycopg2-binary==2.9.9
+passlib==1.7.4
+bcrypt==4.0.1
+python-jose[cryptography]
+openai
+python-multipart
+pycodestyle
+pydantic==2.7.1
+pydantic-settings==2.2.1
+# --- THE FIX: Using a stable patch version to fix chromadb internal bugs ---
+chromadb==0.4.24
+protobuf==4.25.3
+grpcio==1.62.2
+numpy==1.26.4
+GitPython
+gunicorn
+# --- NEW DEPENDENCY FOR HUGGING FACE EMBEDDINGS ---
+sentence-transformers

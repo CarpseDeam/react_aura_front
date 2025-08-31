@@ -1,0 +1,12 @@
+# .gcloudignore
+
+# Ignore everything by default.
+*
+
+# Whitelist the Dockerfile needed to build the image.
+!Dockerfile
+
+# Whitelist the llm_server directory and everything inside it.
+# This now includes the 'providers' subdirectory.
+!llm_server
+!llm_server/**

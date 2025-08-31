@@ -1,0 +1,31 @@
+# Ignore virtual environments
+.venv/
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore Git directory
+.git/
+
+# Ignore user-generated workspaces and projects (CRITICAL for web server)
+workspaces/
+projects/
+
+# Ignore local databases and logs
+*.db
+*.sqlite3
+*.log
+.rag_db/
+
+# Ignore IDE/editor configuration
+.idea/
+.vscode/
+
+# Ignore testing caches
+.pytest_cache/
+
+# Ignore environment files
+.env
