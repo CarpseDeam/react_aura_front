@@ -1,0 +1,480 @@
+/* src/App.css - Improved layout with animations */
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ide-bg);
+}
+
+/* Header */
+.mainframe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  height: 45px;
+  background-color: var(--sidebar-bg);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-title {
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+.active-project-display {
+  background-color: var(--ide-bg);
+  border: 1px solid var(--amber-primary);
+  color: var(--amber-primary);
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  border-radius: 2px;
+}
+
+.active-project-display .label {
+  opacity: 0.6;
+}
+
+.header-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.header-button {
+  background: var(--ide-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-default);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-primary);
+  font-size: 0.8rem;
+}
+
+.header-button:hover {
+  background-color: var(--amber-primary);
+  color: var(--ide-bg);
+  border-color: var(--amber-primary);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.command-deck-panel {
+  flex: 2.5;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mission-control-panel {
+  flex: 1;
+  background-color: var(--sidebar-bg);
+  border-left: 1px solid var(--border-color);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+/* Terminal Header */
+.terminal-header {
+  margin-bottom: 2rem;
+}
+
+.ascii-banner {
+  font-family: var(--font-primary);
+  white-space: pre;
+  color: var(--amber-primary);
+  text-shadow: 0 0 10px var(--amber-glow);
+  font-weight: bold;
+  line-height: 1.0;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.tagline {
+  color: var(--text-default);
+  letter-spacing: 3px;
+  font-size: 0.75rem;
+  margin-bottom: 0;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* Messages */
+.log-display {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+}
+
+.system-message {
+  font-family: var(--font-primary);
+  margin: 0.3rem 0;
+  padding: 0.1rem 0;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: baseline;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.system-message.info {
+  color: var(--accent-blue);
+}
+
+.system-message.good {
+  color: var(--accent-green);
+}
+
+.system-message.executing {
+  color: var(--amber-primary);
+}
+
+.system-message.planning {
+  color: #9b59b6;
+}
+
+.system-prefix {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+  font-weight: bold;
+}
+
+.system-text {
+  flex-grow: 1;
+}
+
+.cursor-blink {
+  color: var(--amber-primary);
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Input */
+.prompt-area {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.prompt-prefix {
+  color: var(--amber-primary);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.prompt-input {
+  flex: 1;
+  background-color: var(--ide-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-default);
+  padding: 12px;
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.prompt-input:focus {
+  outline: none;
+  border-color: var(--amber-primary);
+  box-shadow: 0 0 8px var(--amber-glow);
+}
+
+.prompt-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.send-button {
+  background-color: var(--amber-primary);
+  border: none;
+  color: var(--ide-bg);
+  padding: 12px 24px;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.send-button:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mission Control */
+.mission-control-panel h3 {
+  color: var(--amber-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.task-section h4 {
+  color: var(--text-default);
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.task-list {
+  background-color: var(--ide-bg);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  min-height: 200px;
+  border-radius: 2px;
+}
+
+.task-item {
+  color: #666;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.add-task-button {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-default);
+  padding: 10px 16px;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  font-family: var(--font-primary);
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.add-task-button:hover:not(:disabled) {
+  background-color: var(--border-color);
+  color: var(--amber-primary);
+}
+
+.add-task-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dispatch-button {
+  background-color: var(--amber-primary);
+  color: var(--ide-bg);
+  border: none;
+  padding: 18px 30px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-top: auto;
+  letter-spacing: 1px;
+}
+
+.dispatch-button:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+
+.dispatch-button:disabled {
+  background-color: #555;
+  color: #999;
+  cursor: not-allowed;
+  filter: none;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  border-radius: 4px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-default);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: var(--amber-primary);
+}
+
+.modal-content h3 {
+  color: var(--amber-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.modal-content h4 {
+  color: var(--text-default);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Project Modal */
+.project-section {
+  margin-bottom: 2rem;
+}
+
+.project-list {
+  background-color: var(--ide-bg);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.project-item:last-child {
+  border-bottom: none;
+}
+
+.project-name {
+  font-family: var(--font-primary);
+}
+
+.project-action {
+  background: var(--amber-primary);
+  border: none;
+  color: var(--ide-bg);
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.project-action:hover {
+  filter: brightness(1.2);
+}
+
+.create-project {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.create-project input {
+  flex: 1;
+  background-color: var(--ide-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-default);
+  padding: 8px;
+  font-family: var(--font-primary);
+}
+
+.create-project button {
+  background-color: var(--amber-primary);
+  border: none;
+  color: var(--ide-bg);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-weight: bold;
+}
+
+/* Task improvements */
+.task-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.task-status {
+  margin-right: 0.5rem;
+  color: var(--accent-green);
+}
+
+.task-text {
+  flex: 1;
+}
+
+/* Workspace placeholder */
+.workspace-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-default);
+}
+
+.workspace-panel h2 {
+  color: var(--amber-primary);
+  margin-bottom: 1rem;
+}
+
+/* User/Aura message styles */
+.system-message.user {
+  color: var(--accent-blue);
+}
+
+.system-message.aura {
+  color: var(--amber-primary);
+}
+
+/* Active button state */
+.header-button.active {
+  background-color: var(--amber-primary);
+  color: var(--ide-bg);
+  border-color: var(--amber-primary);
+}

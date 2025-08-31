@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
+
+:root {
+  --ide-bg: #1E1E1E;
+  --sidebar-bg: #252526;
+  --text-default: #D4D4D4;
+  --amber-primary: #FFC857;
+  --amber-glow: #FFC85788;
+  --accent-green: #0AF29A;
+  --accent-red: #F44747;
+  --accent-blue: #3498db;
+  --border-color: #333333;
+  --font-primary: 'IBM Plex Mono', monospace;
+  --font-display: 'IBM Plex Mono', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--ide-bg);
+  color: var(--text-default);
+  font-family: var(--font-primary);
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes pulse-amber {
+  0% { box-shadow: 0 0 0 0 var(--amber-glow); }
+  70% { box-shadow: 0 0 10px 15px rgba(255, 200, 87, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 200, 87, 0); }
+}
+
+.pulse-hint {
+  animation: pulse-amber 2s infinite;
+  border-radius: 5px;
+}
