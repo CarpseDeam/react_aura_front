@@ -25,3 +25,4 @@ dist-ssr
 # IntelliJ IDEA files
 .idea/
 *.iml
+/.env

@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (token) {
         try {
           // Verify token is still valid by making an authenticated request
-          const response = await fetch('http://localhost:8080/auth/me', {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('aura_token', response.access_token);
 
       // Get user data after successful login
-      const userResponse = await fetch('http://localhost:8080/auth/me', {
+      const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${response.access_token}`,
           'Content-Type': 'application/json'
