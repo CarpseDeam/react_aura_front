@@ -1,6 +1,6 @@
 // src/components/modals/SettingsModal.tsx
 import { useState, useEffect } from 'react';
-import { keysApi, type ProviderKey, type ProviderKeyCreate } from '../../services/keys';
+import { keysApi, type ProviderKey } from '../../services/keys';
 import { assignmentsApi, type ModelAssignment, type AvailableModels } from '../../services/assignments';
 
 interface SettingsModalProps {
