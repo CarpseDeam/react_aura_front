@@ -1,6 +1,7 @@
 // src/components/chat/ChatInterface.tsx
 import { useState, useRef, useEffect } from 'react';
 import { useChat, type DisplayMessage, AURA_BANNER } from '../../hooks/useChat';
+import KnightRiderScanner from '../KnightRiderScanner';
 
 // Get the return type of the hook to properly type the 'chat' prop
 type ChatHookReturn = ReturnType<typeof useChat>;
@@ -70,6 +71,7 @@ export const ChatInterface = ({ activeProject, chat }: ChatInterfaceProps) => {
           {isProcessing ? 'Thinking...' : 'Send'}
         </button>
       </div>
+      <KnightRiderScanner />
     </div>
   );
 };
