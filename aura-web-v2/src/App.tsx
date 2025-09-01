@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { LandingPage } from './components/LandingPage'
@@ -86,7 +86,7 @@ const CommandDeck = () => {
       {showProjectsModal && (
         <ProjectsModal
           activeProject={activeProject}
-          setActiveProject={setActiveProject}
+          onSelectProject={setActiveProject}
           onClose={() => setShowProjectsModal(false)}
         />
       )}
