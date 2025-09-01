@@ -25,7 +25,10 @@ export const getAuthHeaders = (): HeadersInit => {
  * - Parses JSON response bodies.
  */
 export async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const fullUrl = `${API_BASE_URL}${endpoint}`;
+  console.log('Requesting API URL:', fullUrl); // This will log the URL to the browser console
+
+  const response = await fetch(fullUrl, {
     ...options,
     headers: {
       ...getAuthHeaders(),
