@@ -37,42 +37,62 @@ export const useChat = (activeProject: string | null) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ChatMessage[]>([]);
   const [isBooting, setIsBooting] = useState(true);
+  const [hasBooted, setHasBooted] = useState(false);
   const isProcessingRef = useRef(false);
 
-  // Boot sequence effect
+  // Initial boot sequence effect - runs once on mount
   useEffect(() => {
+    if (hasBooted) return;
+
+    setIsBooting(true);
+    setMessages([]);
+
+    BOOT_SEQUENCE.forEach((message, index) => {
+      const totalDelay = BOOT_SEQUENCE.slice(0, index).reduce((acc, msg) => acc + msg.delay, 0);
+
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          id: `boot-${index}`,
+          sender: message.sender,
+          content: message.content,
+          type: message.type,
+          timestamp: Date.now()
+        }]);
+
+        if (index === BOOT_SEQUENCE.length - 1) {
+          setTimeout(() => {
+            setIsBooting(false);
+            setHasBooted(true);
+            setMessages(prev => [...prev, {
+              id: 'project-prompt',
+              sender: 'AURA',
+              content: PROJECT_PROMPT,
+              type: 'info',
+              timestamp: Date.now()
+            }]);
+          }, 1000);
+        }
+      }, totalDelay);
+    });
+  }, []); // Only run once on mount
+
+  // Project change effect - clear conversation when project changes
+  useEffect(() => {
+    if (!hasBooted) return; // Don't run until after initial boot
+
     if (activeProject) {
-      setIsBooting(true);
-      setMessages([]);
-
-      BOOT_SEQUENCE.forEach((message, index) => {
-        const totalDelay = BOOT_SEQUENCE.slice(0, index).reduce((acc, msg) => acc + msg.delay, 0);
-
-        setTimeout(() => {
-          setMessages(prev => [...prev, {
-            id: `boot-${index}`,
-            sender: message.sender,
-            content: message.content,
-            type: message.type,
-            timestamp: Date.now()
-          }]);
-
-          if (index === BOOT_SEQUENCE.length - 1) {
-            setTimeout(() => {
-              setIsBooting(false);
-              setMessages(prev => [...prev, {
-                id: 'project-prompt',
-                sender: 'AURA',
-                content: PROJECT_PROMPT,
-                type: 'info',
-                timestamp: Date.now()
-              }]);
-            }, 1000);
-          }
-        }, totalDelay);
-      });
+      // Clear conversation and reset for new project
+      setConversationHistory([]);
+      // Don't clear messages - keep the boot sequence and add project loaded message
+      setMessages(prev => [...prev, {
+        id: `project-loaded-${Date.now()}`,
+        sender: 'SYSTEM',
+        content: `Project "${activeProject}" loaded. Ready for commands.`,
+        type: 'good',
+        timestamp: Date.now()
+      }]);
     }
-  }, [activeProject]);
+  }, [activeProject, hasBooted]);
 
   const sendMessage = useCallback(async (content: string) => {
     if (isProcessingRef.current || !activeProject) return;
