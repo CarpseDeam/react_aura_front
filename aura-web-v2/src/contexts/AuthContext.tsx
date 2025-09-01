@@ -70,12 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string) => {
     try {
       const response = await authApi.login(email, password);
-
-      // --- START DIAGNOSTIC LOGGING ---
-      console.log("Token received from API:", response.access_token);
       localStorage.setItem('aura_token', response.access_token);
-      console.log("Token retrieved from localStorage:", localStorage.getItem('aura_token'));
-      // --- END DIAGNOSTIC LOGGING ---
 
       // Get user data after successful login
       const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/users/me`, {
