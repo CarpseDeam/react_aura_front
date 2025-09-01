@@ -1,6 +1,7 @@
-// src/components/workspace/CodeViewer.tsx
 import { useState, useEffect } from 'react';
 import { filesService } from '../../services/files';
+import { getWebSocketService } from '../../services/websocket';
+import { StreamingCodeRenderer } from './StreamingCodeRenderer';
 import './CodeViewer.css';
 
 interface CodeViewerProps {
@@ -21,17 +22,70 @@ export const CodeViewer = ({ activeProject, selectedFile }: CodeViewerProps) => 
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [streamingFile, setStreamingFile] = useState<string | null>(null);
 
+  // Effect to handle file selection from the tree
   useEffect(() => {
     if (selectedFile && activeProject) {
       openFile(selectedFile);
     }
   }, [selectedFile, activeProject]);
 
+  // Effect to handle real-time code streaming from the agent
+  useEffect(() => {
+    const ws = getWebSocketService();
+
+    const handleCodeStream = (message: any) => {
+      if (message.type === 'code_stream_chunk' && message.content) {
+        const { filePath, chunk } = message.content;
+
+        setOpenTabs(prevTabs => {
+          const existingTab = prevTabs.find(tab => tab.filePath === filePath);
+
+          if (streamingFile !== filePath) {
+            // This is the first chunk for this file, overwrite content
+            setStreamingFile(filePath);
+            if (existingTab) {
+              return prevTabs.map(tab => 
+                tab.filePath === filePath ? { ...tab, content: chunk, modified: true } : tab
+              );
+            } else {
+              const fileName = filePath.split('/').pop() || filePath;
+              const language = filesService.getLanguageFromExtension(fileName);
+              const newTab: OpenTab = { filePath, fileName, content: chunk, language, modified: true };
+              return [...prevTabs, newTab];
+            }
+          } else {
+            // This is a subsequent chunk, append content
+            if (existingTab) {
+              return prevTabs.map(tab =>
+                tab.filePath === filePath ? { ...tab, content: tab.content + chunk, modified: true } : tab
+              );
+            } else {
+              // This case should ideally not happen if streamingFile is set correctly
+              const fileName = filePath.split('/').pop() || filePath;
+              const language = filesService.getLanguageFromExtension(fileName);
+              const newTab: OpenTab = { filePath, fileName, content: chunk, language, modified: true };
+              return [...prevTabs, newTab];
+            }
+          }
+        });
+
+        // Automatically switch to the tab being updated
+        setActiveTab(filePath);
+      }
+    };
+
+    const unsubscribe = ws.on('code_stream_chunk', handleCodeStream);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [streamingFile]); // Rerun when streamingFile changes
+
   const openFile = async (filePath: string) => {
     if (!activeProject) return;
 
-    // Check if tab is already open
     const existingTab = openTabs.find(tab => tab.filePath === filePath);
     if (existingTab) {
       setActiveTab(filePath);
@@ -46,13 +100,7 @@ export const CodeViewer = ({ activeProject, selectedFile }: CodeViewerProps) => 
       const fileName = filePath.split('/').pop() || filePath;
       const language = filesService.getLanguageFromExtension(fileName);
 
-      const newTab: OpenTab = {
-        filePath,
-        fileName,
-        content,
-        language,
-        modified: false
-      };
+      const newTab: OpenTab = { filePath, fileName, content, language, modified: false };
 
       setOpenTabs(prev => [...prev, newTab]);
       setActiveTab(filePath);
@@ -78,18 +126,7 @@ export const CodeViewer = ({ activeProject, selectedFile }: CodeViewerProps) => 
   const renderLineNumbers = (content: string) => {
     const lines = content.split('\n');
     return lines.map((_, index) => (
-      <div key={index} className="line-number">
-        {index + 1}
-      </div>
-    ));
-  };
-
-  const renderCodeContent = (content: string, language: string) => {
-    const lines = content.split('\n');
-    return lines.map((line, index) => (
-      <div key={index} className={`code-line ${language}`}>
-        {line || '\u00A0'} {/* Non-breaking space for empty lines */}
-      </div>
+      <div key={index} className="line-number">{index + 1}</div>
     ));
   };
 
@@ -109,10 +146,7 @@ export const CodeViewer = ({ activeProject, selectedFile }: CodeViewerProps) => 
             {tab.modified && <span className="tab-modified">●</span>}
             <button
               className="tab-close"
-              onClick={(e) => {
-                e.stopPropagation();
-                closeTab(tab.filePath);
-              }}
+              onClick={(e) => { e.stopPropagation(); closeTab(tab.filePath); }}
             >
               ×
             </button>
@@ -126,15 +160,9 @@ export const CodeViewer = ({ activeProject, selectedFile }: CodeViewerProps) => 
         ) : error ? (
           <div className="code-error">{error}</div>
         ) : !activeProject ? (
-          <div className="code-welcome">
-            <h3>Welcome to AURA Workspace</h3>
-            <p>Load a project and select a file to start coding</p>
-          </div>
+          <div className="code-welcome"><h3>Welcome to AURA Workspace</h3><p>Load a project and select a file to start coding</p></div>
         ) : !activeTabContent ? (
-          <div className="code-welcome">
-            <h3>No file selected</h3>
-            <p>Select a file from the explorer to view its contents</p>
-          </div>
+          <div className="code-welcome"><h3>No file selected</h3><p>Select a file from the explorer to view its contents</p></div>
         ) : (
           <div className="code-editor">
             <div className="code-header">
@@ -146,7 +174,10 @@ export const CodeViewer = ({ activeProject, selectedFile }: CodeViewerProps) => 
                 {renderLineNumbers(activeTabContent.content)}
               </div>
               <div className="code-text">
-                {renderCodeContent(activeTabContent.content, activeTabContent.language)}
+                <StreamingCodeRenderer 
+                  content={activeTabContent.content} 
+                  language={activeTabContent.language} 
+                />
               </div>
             </div>
           </div>
