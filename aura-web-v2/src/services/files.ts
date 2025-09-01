@@ -1,5 +1,5 @@
 // src/services/files.ts
-import { api } from './api';
+import { apiClient } from './api';
 
 export interface FileNode {
   name: string;
@@ -11,8 +11,7 @@ export interface FileNode {
 class FilesService {
   async getFileTree(projectName: string): Promise<FileNode[]> {
     try {
-      const response = await api.get(`/api/projects/workspace/${projectName}/files`);
-      return response.data;
+      return await apiClient<FileNode[]>(`/api/projects/workspace/${projectName}/files`);
     } catch (error) {
       console.error('Error fetching file tree:', error);
       throw error;
@@ -21,10 +20,7 @@ class FilesService {
 
   async getFileContent(projectName: string, filePath: string): Promise<string> {
     try {
-      const response = await api.get(`/api/projects/workspace/${projectName}/file`, {
-        params: { path: filePath }
-      });
-      return response.data;
+      return await apiClient<string>(`/api/projects/workspace/${projectName}/file?path=${encodeURIComponent(filePath)}`);
     } catch (error) {
       console.error('Error fetching file content:', error);
       throw error;
