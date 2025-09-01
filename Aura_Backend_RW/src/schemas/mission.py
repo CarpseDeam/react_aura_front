@@ -18,8 +18,9 @@ class TaskCreateRequest(BaseModel):
     description: str = Field(..., min_length=1)
 
 class TaskUpdateRequest(BaseModel):
-    """Schema for updating a task's description."""
-    description: str = Field(..., min_length=1)
+    """Schema for updating a task."""
+    description: Optional[str] = Field(None, min_length=1)
+    done: Optional[bool] = None
 
 class TasksReorderRequest(BaseModel):
     """Schema for reordering tasks."""

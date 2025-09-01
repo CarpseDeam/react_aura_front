@@ -75,12 +75,13 @@ async def update_mission_task(
     mission_log: MissionLogService = Depends(get_project_mission_log),
     current_user: User = Depends(get_current_user)
 ):
-    """Updates the description of an existing task."""
+    """Updates the description and/or done status of an existing task."""
     try:
         updated_task = await mission_log.update_task(
             user_id=str(current_user.id),
             task_id=task_id,
-            description=request.description
+            description=request.description,
+            done=request.done
         )
         if not updated_task:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with ID {task_id} not found.")

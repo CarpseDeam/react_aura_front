@@ -220,6 +220,7 @@ class ConductorService:
                     await self._handle_mission_completion(user_id)
                     break
                 current_task = pending_tasks[0]
+                await self.post_chat_message(user_id, "Conductor", f"Executing task: {current_task['description']}")
                 await websocket_manager.broadcast_to_user(
                     {"type": "active_task_updated", "content": {"taskId": current_task['id']}},
                     user_id
@@ -229,6 +230,7 @@ class ConductorService:
                 while retry_count <= self.MAX_RETRIES_PER_TASK:
                     if not await mission_control.is_mission_running(user_id):
                         break
+                    await self.post_chat_message(user_id, "Conductor", "Selecting best tool for the job...")
                     self.log("info", f"Executing task {current_task['id']}: {current_task['description']}")
                     tool_call = await self._get_tool_call_for_task(user_id, current_task,
                                                                    current_task.get('last_error'))
@@ -238,7 +240,11 @@ class ConductorService:
                         retry_count += 1
                         continue
 
-                    # Pass necessary context for code generation to the tool runner
+                    tool_name = tool_call.get('tool_name', 'unknown_tool')
+                    tool_args = tool_call.get('arguments', {})
+                    await self.post_chat_message(user_id, "Conductor", f"Tool selected: `{tool_name}` with arguments: `{json.dumps(tool_args)}`")
+                    await websocket_manager.broadcast_to_user({"type": "agent_status", "status": "executing"}, user_id)
+
                     result = await tool_runner_service.run_tool_by_dict(
                         tool_call,
                         user_id=user_id,
@@ -259,6 +265,9 @@ class ConductorService:
                         self.log("warning", f"Task {current_task['id']} failed. Error: {error_message}.")
                         await self.post_chat_message(user_id, "Conductor",
                                                      f"Task failed, retrying. Error: {error_message}", is_error=True)
+                
+                await websocket_manager.broadcast_to_user({"type": "agent_status", "status": "thinking"}, user_id)
+
                 if not task_succeeded and await mission_control.is_mission_running(user_id):
                     self.log("error", f"Task {current_task['id']} failed after retries. Re-planning.")
                     await self.post_chat_message(user_id, "Aura", "I'm stuck. Rethinking my approach.", is_error=True)

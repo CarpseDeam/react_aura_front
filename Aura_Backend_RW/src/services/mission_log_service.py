@@ -74,7 +74,7 @@ class MissionLogService:
                 tasks_from_disk = []
 
         message = {
-            "type": "mission_log_updated",
+            "type": "tasks_updated",
             "content": {"tasks": tasks_from_disk}
         }
         await websocket_manager.broadcast_to_user(message, user_id)
@@ -201,20 +201,46 @@ class MissionLogService:
         """Returns the initial user goal that started the mission."""
         return self._initial_user_goal
 
-    async def update_task(self, user_id: str, task_id: int, description: str) -> Optional[Dict[str, Any]]:
-        """Updates the description of a specific task."""
-        if not description or not description.strip():
-            raise ValueError("Task description cannot be empty.")
+    async def update_task(
+        self,
+        user_id: str,
+        task_id: int,
+        description: Optional[str] = None,
+        done: Optional[bool] = None
+    ) -> Optional[Dict[str, Any]]:
+        """Updates the description and/or done status of a specific task."""
+        if description is None and done is None:
+            logger.warning(f"Update task called for task {task_id} without description or done status.")
+            return next((task for task in self.tasks if task.get('id') == task_id), None)
 
-        for task in self.tasks:
-            if task.get('id') == task_id:
-                task['description'] = description
-                self._save_log_to_disk()
-                await self._notify_ui(user_id)
-                logger.info(f"Updated task {task_id} for user {user_id}.")
-                return task
-        logger.warning(f"Attempted to update non-existent task {task_id} for user {user_id}.")
-        return None
+        task_to_update = next((task for task in self.tasks if task.get('id') == task_id), None)
+
+        if not task_to_update:
+            logger.warning(f"Attempted to update non-existent task {task_id} for user {user_id}.")
+            return None
+
+        updated = False
+        if description is not None:
+            if not description.strip():
+                raise ValueError("Task description cannot be empty.")
+            if task_to_update['description'] != description:
+                task_to_update['description'] = description
+                updated = True
+                logger.info(f"Updated task {task_id} description for user {user_id}.")
+
+        if done is not None:
+            if task_to_update['done'] != done:
+                task_to_update['done'] = done
+                if done:
+                    task_to_update['last_error'] = None  # Clear error on completion
+                updated = True
+                logger.info(f"Updated task {task_id} done status to {done} for user {user_id}.")
+
+        if updated:
+            self._save_log_to_disk()
+            await self._notify_ui(user_id)
+
+        return task_to_update
 
     async def delete_task(self, user_id: str, task_id: int) -> bool:
         """Deletes a specific task from the log."""
@@ -234,7 +260,6 @@ class MissionLogService:
         """Reorders the entire task list based on a list of IDs."""
         task_map = {task['id']: task for task in self.tasks}
 
-        # Check if all provided IDs are valid and match the current tasks
         if len(ordered_task_ids) != len(self.tasks) or set(ordered_task_ids) != set(task_map.keys()):
             logger.error(f"Task reorder request for user {user_id} has mismatched or invalid IDs.")
             return False

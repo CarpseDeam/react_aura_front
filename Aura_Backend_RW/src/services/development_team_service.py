@@ -144,8 +144,7 @@ class DevelopmentTeamService:
         """
         Invokes the Auditor agent to verify the blueprint against the user's prompt.
         """
-        await websocket_manager.broadcast_to_user(
-            {"type": "phase", "content": "Auditor is verifying the plan's correctness..."}, user_id)
+        await self._post_chat_message(user_id, "Auditor", "Verifying blueprint against user requirements...")
 
         prompt = AUDITOR_PROMPT.format(
             user_prompt=user_prompt,
@@ -162,6 +161,7 @@ class DevelopmentTeamService:
             audit_result = self.parse_json_response(response_str)
             if audit_result.get("audit_passed") is True:
                 self.log("success", "AUDIT PASSED: The plan is aligned with the user's request.")
+                await self._post_chat_message(user_id, "Auditor", "Blueprint approved. Passing to Sequencer for task breakdown.")
                 return True
             else:
                 self.log("error", "AUDIT FAILED: The plan created by the Architect was a hallucination and did not match the user's core requirements.")
@@ -180,6 +180,7 @@ class DevelopmentTeamService:
         self.refresh_llm_assignments()
 
         # --- Phase 1: Architect ---
+        await self._post_chat_message(user_id, "Architect", "Analyzing user request to design a software blueprint...")
         architect_prompt = ARCHITECT_PROMPT.format(user_idea=user_idea, project_name=project_name)
         messages = [{"role": "user", "content": architect_prompt}]
         blueprint_response = await self.unified_llm_streamer(int(user_id), "planner", messages, is_json=True)
@@ -193,6 +194,7 @@ class DevelopmentTeamService:
             final_blueprint = blueprint_data.get("final_blueprint")
             if not final_blueprint or not isinstance(final_blueprint, dict):
                 raise ValueError("Architect's final_blueprint was missing or malformed.")
+            await self._post_chat_message(user_id, "Architect", "Blueprint created. Submitting for audit.")
         except (ValueError, json.JSONDecodeError) as e:
             await self.handle_error(user_id, "Architect", f"Failed to create a valid blueprint: {e}.")
             return
@@ -203,8 +205,7 @@ class DevelopmentTeamService:
             return  # Stop the entire process if the audit fails.
 
         # --- Phase 3: Sequencer ---
-        await websocket_manager.broadcast_to_user(
-            {"type": "phase", "content": "Sequencer is generating the detailed task list..."}, str(user_id))
+        await self._post_chat_message(user_id, "Sequencer", "Breaking down blueprint into a step-by-step task list...")
         sequencer_prompt = SEQUENCER_PROMPT.format(blueprint=json.dumps(final_blueprint, indent=2))
         messages = [{"role": "user", "content": sequencer_prompt}]
         plan_response = await self.unified_llm_streamer(int(user_id), "planner", messages, is_json=True)
@@ -225,8 +226,9 @@ class DevelopmentTeamService:
 
             mission_log_service = self.service_manager.mission_log_service
             await mission_log_service.set_initial_plan(user_id, final_plan_steps, user_idea)
+            await self._post_chat_message(user_id, "Sequencer", "Task list generated.")
             await self._post_chat_message(user_id, "Aura",
-                                          "Plan approved by Auditor. Review in 'Agent TODO' and dispatch to begin.")
+                                          "Plan approved by Auditor. Review in 'Mission Control' and dispatch to begin.")
         except (ValueError, json.JSONDecodeError) as e:
             await self.handle_error(user_id, "Sequencer", f"Failed to create a valid plan: {e}.")
 
