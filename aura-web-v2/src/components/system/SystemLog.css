@@ -1,0 +1,175 @@
+/* src/components/system/SystemLog.css */
+.system-log {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0a0a0a;
+  border-top: 2px solid #f4b942;
+  z-index: 1000;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.system-log.collapsed {
+  height: 40px;
+}
+
+.system-log.expanded {
+  height: 300px;
+}
+
+.system-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: #111;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.system-log-header:hover {
+  background: #1a1a1a;
+}
+
+.system-log-title {
+  color: #f4b942;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.system-log-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clear-logs-btn {
+  background: transparent;
+  border: 1px solid #666;
+  color: #ccc;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.clear-logs-btn:hover {
+  border-color: #f4b942;
+  color: #f4b942;
+}
+
+.expand-icon {
+  color: #f4b942;
+  font-weight: bold;
+}
+
+.system-log-content {
+  height: calc(100% - 40px);
+  overflow-y: auto;
+  padding: 0.5rem;
+  background: #0a0a0a;
+}
+
+.no-logs {
+  color: #666;
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.log-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.log-entry:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.log-entry.system_log {
+  border-left: 3px solid #4CAF50;
+}
+
+.log-entry.agent_status {
+  border-left: 3px solid #2196F3;
+}
+
+.log-entry.error {
+  border-left: 3px solid #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.log-time {
+  color: #888;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  min-width: 70px;
+}
+
+.log-message {
+  color: #ccc;
+  flex: 1;
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+
+.log-entry.error .log-message {
+  color: #ffcdd2;
+}
+
+.log-entry.agent_status .log-message {
+  color: #bbdefb;
+  font-weight: bold;
+}
+
+.log-entry.system_log .log-message {
+  color: #c8e6c9;
+}
+
+/* Custom scrollbar for the log content */
+.system-log-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.system-log-content::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.system-log-content::-webkit-scrollbar-thumb {
+  background: #f4b942;
+  border-radius: 4px;
+}
+
+.system-log-content::-webkit-scrollbar-thumb:hover {
+  background: #ffcc4d;
+}
+
+/* Animation for new log entries */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.log-entry {
+  animation: slideIn 0.3s ease-out;
+}

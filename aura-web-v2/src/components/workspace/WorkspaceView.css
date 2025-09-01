@@ -1,9 +1,74 @@
 /* src/components/workspace/WorkspaceView.css */
 .workspace-view {
   display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   background: #1e1e1e;
+}
+
+/* Prominent thinking indicator at top of workspace */
+.workspace-thinking-header {
+  background: #111;
+  border-bottom: 2px solid #f4b942;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.thinking-text {
+  color: #f4b942;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.workspace-thinking-animation {
+  flex: 1;
+  height: 8px;
+  margin-left: 1rem;
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.workspace-thinking-animation .knight-rider-bar {
+  width: 100%;
+  height: 100%;
+  background: #f4b942;
+  box-shadow: 0 0 8px #f4b942, 0 0 16px #f4b942, 0 0 24px #f4b942;
+  animation: knight-rider-anim 2s ease-in-out infinite;
+}
+
+@keyframes knight-rider-anim {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.workspace-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
 }
 
 .workspace-left-panel {
