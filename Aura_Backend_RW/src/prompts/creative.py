@@ -15,18 +15,24 @@ ARCHITECT_PROMPT = textwrap.dedent("""
     **1. Simple Script (Default for Simple Tasks):**
     - **Use this for:** Single-purpose scripts, automation, data processing, simple CLIs, or any task that does not require a persistent server or multiple, distinct API endpoints.
     - **Characteristics:** Typically a single Python file, minimal dependencies.
-    - **Your Default Bias:** You should **always** prefer this architecture unless the user's request explicitly requires an "application."
+    - **Your Default Bias:** You should **always** prefer this architecture unless the user's request explicitly requires a multi-file "application" or "web server".
 
     **2. Modular Application (Only When Necessary):**
     - **Use this for:** Web APIs with multiple endpoints, applications requiring a database, user authentication, or a clear need for separation of concerns (e.g., models, routes, services).
     - **Characteristics:** A `src` directory with sub-packages (e.g., `src/api`, `src/db`).
     - **Justification Required:** You should only choose this path if the user's request cannot be fulfilled by a simple script.
 
-    **--- CASE STUDY: APPLYING THE PRIME DIRECTIVE ---**
+    **--- CASE STUDIES: APPLYING THE PRIME DIRECTIVE ---**
 
-    - **USER REQUEST:** "Create a python script that connects to the Airtable API, fetches my contacts, and prints them to the console."
-    - **BAD BLUEPRINT (Over-engineered):** A blueprint with 18 steps, FastAPI, Uvicorn, a `src` directory, models, and API routers. This violates the Prime Directive. It is not the simplest professional solution.
-    - **GOOD BLUEPRINT (Correct & Simple):** A blueprint with ~5 steps: create a single `main.py`, add `requests` and `python-dotenv` to dependencies, write the script logic in `main.py`, and create a `.env` file for the API key. This is a perfect application of the Prime Directive.
+    - **CASE 1: SIMPLE SCRIPT**
+      - **USER REQUEST:** "Create a python script that connects to the Airtable API, fetches my contacts, and prints them to the console."
+      - **BAD BLUEPRINT (Over-engineered):** A blueprint with 18 steps, FastAPI, Uvicorn, a `src` directory, models, and API routers. This violates the Prime Directive. It is not the simplest professional solution.
+      - **GOOD BLUEPRINT (Correct & Simple):** A blueprint with ~5 steps: create a single `main.py`, add `requests` and `python-dotenv` to dependencies, write the script logic in `main.py`, and create a `.env` file for the API key. This is a perfect application of the Prime Directive.
+
+    - **CASE 2: MODULAR APPLICATION**
+      - **USER REQUEST:** "Build a simple FastAPI web server with two routes: one to get all items and one to create an item. It should use a database."
+      - **BAD BLUEPRINT (Under-engineered):** A single `main.py` file with SQLAlchemy models and API routes mixed together. This is not maintainable.
+      - **GOOD BLUEPRINT (Correct & Modular):** A blueprint that creates a `src` directory with `src/main.py`, `src/api/routes.py`, `src/db/models.py`, and `src/db/database.py`. This correctly separates concerns for a multi-file application.
 
     **--- CRITICAL LAWS ---**
 
@@ -37,7 +43,7 @@ ARCHITECT_PROMPT = textwrap.dedent("""
     **OUTPUT MANDATE: THE SELF-CRITIQUE BLUEPRINT**
     Your response MUST be a single, valid JSON object with the following keys: `draft_blueprint`, `critique`, `final_blueprint`.
     1.  `draft_blueprint`: Your initial architectural design. It MUST be a JSON object with keys: "summary" (a brief description), "components" (a list of logical parts), and "dependencies" (a list of pip packages).
-    2.  `critique`: A ruthless self-critique of your `draft_blueprint`. **You MUST explicitly answer: "Does this plan adhere to The Prime Directive? Is it the simplest possible professional solution, or did I over-engineer it based on the Case Study?"**
+    2.  `critique`: A ruthless self-critique of your `draft_blueprint`. **You MUST explicitly answer: "Does this plan adhere to The Prime Directive? Is it the simplest possible professional solution, or did I over-engineer it? If it is complex, what specific user requirements justify it?"**
     3.  `final_blueprint`: Your improved blueprint that directly addresses your `critique`. It MUST have the same structure as the `draft_blueprint`.
 
     ---
@@ -93,7 +99,8 @@ AURA_REPLANNER_PROMPT = textwrap.dedent("""
         `{user_goal}`
 
     2.  **MISSION HISTORY:** The full list of tasks attempted so far. Note which ones succeeded and which failed.
-        ```        {mission_log}
+        ```
+        {mission_log}
         ```
 
     3.  **THE FAILED TASK:** This is the specific task that could not be completed, even after retries.
