@@ -8,112 +8,26 @@ import { ChatInterface } from './components/chat/ChatInterface'
 import { TaskList } from './components/mission/TaskList'
 import { useChat } from './hooks/useChat'
 
-// Fixed ASCII Art - AURA with proper spelling and outlined style
-const AuraAsciiLogo = () => (
-  <pre className="boot-ascii-logo">
-    {`
- █████╗ ██╗   ██╗██████╗  █████╗
-██╔══██╗██║   ██║██╔══██╗██╔══██╗
-███████║██║   ██║██████╔╝███████║
-██╔══██║██║   ██║██╔══██╗██╔══██║
-██║  ██║╚██████╔╝██║  ██║██║  ██║
-╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-    `}
-  </pre>
-);
-
 // Command Deck Component (for authenticated users)
 const CommandDeck = () => {
   const [activeProject, setActiveProject] = useState<string | null>(null)
   const [showProjectsModal, setShowProjectsModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [showWorkspace, setShowWorkspace] = useState(false)
-  const [systemBooting, setSystemBooting] = useState(true)
-  const [bootStep, setBootStep] = useState(0)
-  const [bootExiting, setBootExiting] = useState(false)
 
   const chat = useChat(activeProject)
   const { user, logout } = useAuth()
 
-  const bootMessages = [
-    'INITIALIZING AURA KERNEL V4.0...',
-    'LOADING NEURAL NETWORKS...',
-    'ESTABLISHING COMMAND LINK...',
-    'SYSTEM READY'
-  ]
-
-  // System boot sequence when entering command deck
-  useEffect(() => {
-    if (!systemBooting) return
-
-    const bootSequence = bootMessages.map((_, index) =>
-      setTimeout(() => setBootStep(index), index * 600)
-    )
-
-    const finishBoot = setTimeout(() => {
-      setBootExiting(true)
-      setTimeout(() => setSystemBooting(false), 500)
-    }, bootMessages.length * 600 + 800)
-
-    return () => {
-      bootSequence.forEach(clearTimeout)
-      clearTimeout(finishBoot)
-    }
-  }, [systemBooting])
-
-  // Show boot screen during initial system boot
-  if (systemBooting) {
-    return (
-      <div className={`boot-screen ${bootExiting ? 'exiting' : ''}`}>
-        <div className="boot-content">
-          <div className="aura-boot-logo">
-            <AuraAsciiLogo />
-            <p className="tagline">AUTONOMOUS VIRTUAL MACHINE</p>
-          </div>
-          <div className="boot-messages">
-            {bootMessages.map((message, index) => (
-              <div
-                key={index}
-                className={`boot-message ${index <= bootStep ? 'visible' : ''} ${index === bootStep ? 'active' : ''}`}
-              >
-                {message}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="app-container">
-      {/* Modals */}
-      {showProjectsModal && (
-        <ProjectsModal
-          onClose={() => setShowProjectsModal(false)}
-          onSelectProject={setActiveProject}
-          activeProject={activeProject}
-        />
-      )}
-
-      {showSettingsModal && (
-        <SettingsModal onClose={() => setShowSettingsModal(false)} />
-      )}
-
-      {/* Header */}
       <header className="mainframe-header">
         <div className="header-left">
-          <span className="header-title">AURA // COMMAND DECK</span>
-          {activeProject && (
-            <span className="active-project-display">
-              <span className="label">PROJECT:</span> {activeProject}
-            </span>
-          )}
+          <h1 className="header-title">AURA // COMMAND DECK</h1>
+          <div className="user-info">
+            {user?.email}
+          </div>
         </div>
         <div className="header-right">
-          <span className="user-info">
-            {user?.email}
-          </span>
           <button
             className="header-button"
             onClick={() => setShowProjectsModal(true)}
@@ -127,7 +41,7 @@ const CommandDeck = () => {
             Settings
           </button>
           <button
-            className={`header-button ${showWorkspace ? 'active' : ''}`}
+            className="header-button"
             onClick={() => setShowWorkspace(!showWorkspace)}
           >
             {showWorkspace ? 'View Command Deck' : 'View Workspace'}
@@ -167,6 +81,21 @@ const CommandDeck = () => {
           </div>
         )}
       </div>
+
+      {/* Modals */}
+      {showProjectsModal && (
+        <ProjectsModal
+          activeProject={activeProject}
+          setActiveProject={setActiveProject}
+          onClose={() => setShowProjectsModal(false)}
+        />
+      )}
+
+      {showSettingsModal && (
+        <SettingsModal
+          onClose={() => setShowSettingsModal(false)}
+        />
+      )}
     </div>
   )
 }
