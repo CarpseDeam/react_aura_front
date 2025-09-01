@@ -82,6 +82,17 @@ interface ChatMessageProps {
 }
 
 const ChatMessage = ({ message }: ChatMessageProps) => {
+  if (message.type === 'terminal') {
+    return (
+      <div className="terminal-message">
+        <span className="terminal-prompt">$</span>
+        <span className="terminal-sender">{message.sender.toLowerCase()}</span>
+        <span className="terminal-separator">:</span>
+        <span className="terminal-content">{message.content}</span>
+      </div>
+    );
+  }
+
   return (
     <div className={`system-message ${message.type}`}>
       <span className="system-prefix">[{message.sender.toUpperCase()}]</span>

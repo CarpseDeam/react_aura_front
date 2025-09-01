@@ -10,6 +10,11 @@ export const useTasks = (activeProject: string | null) => {
   const [error, setError] = useState('');
   const [dispatching, setDispatching] = useState(false);
 
+  // Reset dispatching when project changes
+  useEffect(() => {
+    setDispatching(false);
+  }, [activeProject]);
+
   const loadTasks = useCallback(async () => {
     if (!activeProject) {
       setTasks([]);

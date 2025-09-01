@@ -2,12 +2,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { chatApi } from '../services/chat';
 import type { ChatMessage } from '../types/chat';
+import { getWebSocketService } from '../services/websocket';
+import type { WebSocketMessage } from '../services/websocket';
 
 export interface DisplayMessage {
   id: string;
   sender: string;
   content: string;
-  type: 'info' | 'good' | 'executing' | 'planning' | 'user' | 'aura' | 'error';
+  type: 'info' | 'good' | 'executing' | 'planning' | 'user' | 'aura' | 'error' | 'terminal';
   timestamp: number;
 }
 
@@ -93,6 +95,52 @@ export const useChat = (activeProject: string | null) => {
       }]);
     }
   }, [activeProject, hasBooted]);
+
+  // WebSocket integration for system messages
+  useEffect(() => {
+    if (!hasBooted || !activeProject) return;
+
+    const webSocketService = getWebSocketService();
+
+    const handleSystemLog = (message: WebSocketMessage) => {
+      if (message.type === 'system_log' && message.content) {
+        const terminalMessage: DisplayMessage = {
+          id: `terminal-${Date.now()}-${Math.random()}`,
+          sender: 'TERMINAL',
+          content: message.content,
+          type: 'terminal',
+          timestamp: Date.now()
+        };
+        setMessages(prev => [...prev, terminalMessage]);
+      }
+    };
+
+    const handleAgentStatus = (message: WebSocketMessage) => {
+      if (message.type === 'agent_status' && message.status) {
+        const statusMessage = message.status === 'thinking' ? '🧠 AURA is thinking...' :
+                             message.status === 'executing' ? '⚡ AURA is executing commands...' :
+                             message.status === 'idle' ? '✅ AURA completed task' : 
+                             `📡 AURA status: ${message.status}`;
+        
+        const terminalMessage: DisplayMessage = {
+          id: `status-${Date.now()}`,
+          sender: 'STATUS',
+          content: statusMessage,
+          type: 'terminal',
+          timestamp: Date.now()
+        };
+        setMessages(prev => [...prev, terminalMessage]);
+      }
+    };
+
+    const unsubscribeSystemLog = webSocketService.on('system_log', handleSystemLog);
+    const unsubscribeAgentStatus = webSocketService.on('agent_status', handleAgentStatus);
+
+    return () => {
+      unsubscribeSystemLog();
+      unsubscribeAgentStatus();
+    };
+  }, [hasBooted, activeProject]);
 
   const sendMessage = useCallback(async (content: string) => {
     if (isProcessingRef.current || !activeProject) return;

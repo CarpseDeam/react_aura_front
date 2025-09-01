@@ -1,7 +1,6 @@
 /* src/components/workspace/WorkspaceView.css */
 .workspace-view {
   display: flex;
-  flex-direction: column;
   height: 100%;
   width: 100%;
   background: #1e1e1e;
@@ -65,11 +64,6 @@
   }
 }
 
-.workspace-content {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-}
 
 .workspace-left-panel {
   flex-shrink: 0;

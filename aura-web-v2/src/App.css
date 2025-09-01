@@ -400,6 +400,43 @@
   white-space: pre-wrap;
 }
 
+/* Terminal Message Styles */
+.terminal-message {
+  margin: 0.25rem 0;
+  display: flex;
+  align-items: flex-start;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 2px;
+  padding: 0.4rem 0.6rem;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.terminal-prompt {
+  color: #4ade80;
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.terminal-sender {
+  color: #60a5fa;
+  margin-right: 0.25rem;
+  font-weight: bold;
+}
+
+.terminal-separator {
+  color: #666;
+  margin-right: 0.5rem;
+}
+
+.terminal-content {
+  color: #ccc;
+  flex: 1;
+  white-space: pre-wrap;
+}
+
 .cursor-blink {
   color: #f4b942;
   animation: blink 1s infinite;
