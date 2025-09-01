@@ -25,7 +25,7 @@ export const tasksApi = {
   },
 
   async dispatchMission(projectName: string) {
-    return apiClient<{ message: string }>(`/agent/projects/dispatch`, {
+    return apiClient<{ message: string }>(`/projects/dispatch`, {
       method: 'POST',
       body: JSON.stringify({ project_name: projectName })
     });
