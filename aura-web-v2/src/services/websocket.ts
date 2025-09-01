@@ -28,7 +28,7 @@ export class WebSocketService {
         return;
       }
 
-      const wsUrl = API_BASE_URL.replace('http', 'ws') + `/ws/command_deck?token=${token}`;
+      const wsUrl = API_BASE_URL.replace(/^https?/, API_BASE_URL.startsWith('https') ? 'wss' : 'ws') + `/ws/command_deck?token=${token}`;
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
