@@ -4,6 +4,7 @@ from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from src.db.database import engine
 from src.db import models
+from src.services import mission_control
 from src.api import auth, agent, keys, assignments, missions, websockets
 
 # This creates your database tables if they don't exist
