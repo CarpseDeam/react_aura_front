@@ -39,6 +39,22 @@ export const useChat = (activeProject: string | null) => {
   const [isBooting, setIsBooting] = useState(true);
   const isProcessingRef = useRef(false);
 
+  const addMessage = useCallback((
+    sender: DisplayMessage['sender'],
+    content: string,
+    type: DisplayMessage['type']
+  ) => {
+    const message: DisplayMessage = {
+      id: crypto.randomUUID(),
+      sender,
+      content,
+      type,
+      timestamp: Date.now()
+    };
+    setMessages(prev => [...prev, message]);
+    return message;
+  }, []);
+
   // Boot sequence effect
   useEffect(() => {
     if (activeProject) {
@@ -97,20 +113,20 @@ export const useChat = (activeProject: string | null) => {
       const updatedHistory = [...conversationHistory, newMessage];
       setConversationHistory(updatedHistory);
 
-      // Call chat API
-      const response = await chatApi.sendMessage(activeProject, updatedHistory);
+      // FIXED: Use the correct API method - sendPrompt instead of sendMessage
+      const response = await chatApi.sendPrompt(activeProject, content, updatedHistory);
 
       // Add assistant response
       const assistantMessage: DisplayMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'AURA',
-        content: response.content,
-        type: response.type || 'aura',
+        content: response.message || 'Task received and processed.',
+        type: 'aura',
         timestamp: Date.now()
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-      setConversationHistory([...updatedHistory, { role: 'assistant', content: response.content }]);
+      setConversationHistory([...updatedHistory, { role: 'assistant', content: response.message || 'Task received and processed.' }]);
 
     } catch (error) {
       console.error('Chat error:', error);
