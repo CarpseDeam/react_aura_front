@@ -53,6 +53,14 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
 
       <div className="task-section">
         <h4>Current Tasks ({tasks.length})</h4>
+        
+        {/* NEW: Thinking animation */}
+        {dispatching && (
+          <div className="thinking-animation">
+            <div className="knight-rider-bar"></div>
+          </div>
+        )}
+
         <div className="task-list">
           {loading ? (
             <div className="task-item">Loading tasks...</div>
@@ -71,25 +79,25 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
             ))
           )}
         </div>
+      </div>
 
-        <div className="add-task-section">
-          <input
-            type="text"
-            placeholder="Describe a new task..."
-            value={newTaskDescription}
-            onChange={(e) => setNewTaskDescription(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
-            disabled={isBooting || !activeProject}
-            className="task-input"
-          />
-          <button
-            className="add-task-button"
-            onClick={handleAddTask}
-            disabled={isBooting || !activeProject}
-          >
-            + Add Task
-          </button>
-        </div>
+      <div className="add-task-section">
+        <input
+          type="text"
+          placeholder="Describe a new task..."
+          value={newTaskDescription}
+          onChange={(e) => setNewTaskDescription(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
+          disabled={isBooting || !activeProject}
+          className="task-input"
+        />
+        <button
+          className="add-task-button"
+          onClick={handleAddTask}
+          disabled={isBooting || !activeProject}
+        >
+          + Add Task
+        </button>
       </div>
 
       <button

@@ -8,6 +8,7 @@ import { SettingsModal } from './components/modals/SettingsModal'
 import { ChatInterface } from './components/chat/ChatInterface'
 import { TaskList } from './components/mission/TaskList'
 import { useChat } from './hooks/useChat'
+import { WorkspaceView } from './components/workspace/WorkspaceView'
 
 // Command Deck Component (for authenticated users)
 const CommandDeck = () => {
@@ -74,12 +75,10 @@ const CommandDeck = () => {
             </div>
           </div>
         ) : (
-          <div className="workspace-view">
-            <div className="workspace-placeholder">
-              <h2>Workspace View</h2>
-              <p>File explorer and code editor will go here...</p>
-            </div>
-          </div>
+          <WorkspaceView 
+            activeProject={activeProject} 
+            isBooting={chat.isBooting} 
+          />
         )}
       </div>
 

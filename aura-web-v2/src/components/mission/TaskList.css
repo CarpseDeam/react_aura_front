@@ -15,27 +15,35 @@
   font-weight: bold;
   margin: 0 0 1rem;
   letter-spacing: 1px;
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
 .mission-control-panel h4 {
   color: #f4b942;
   font-size: 0.8rem;
   font-weight: bold;
-  margin: 1rem 0 0.5rem;
+  margin: 0 0 0.5rem;
   opacity: 0.8;
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
+/* This section now grows to fill available space */
 .task-section {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0; /* Prevents flexbox overflow issues */
+  margin-bottom: 1rem;
 }
 
+/* The list itself now scrolls internally */
 .task-list {
   flex: 1;
-  margin-bottom: 1rem;
-  max-height: 300px;
   overflow-y: auto;
+  border: 1px solid #333;
+  background: #0a0a0a;
+  padding: 0.5rem;
+  border-radius: 4px;
 }
 
 .task-item {
@@ -127,7 +135,7 @@
 .add-task-section {
   display: flex;
   gap: 0.5rem;
-  margin-top: auto;
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
 .task-input {
@@ -188,6 +196,7 @@
   transition: all 0.2s ease;
   margin-top: 1rem;
   letter-spacing: 1px;
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
 .dispatch-button:hover:not(:disabled) {
@@ -208,4 +217,34 @@
   padding: 0.5rem;
   border-radius: 2px;
   font-size: 0.8rem;
+}
+
+/* --- NEW: Thinking Animation Styles --- */
+.thinking-animation {
+  height: 5px;
+  margin: 0.5rem 0;
+  background: #000;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.knight-rider-bar {
+  width: 100%;
+  height: 100%;
+  background: #f4b942;
+  box-shadow: 0 0 5px #f4b942, 0 0 10px #f4b942, 0 0 15px #f4b942;
+  animation: knight-rider-anim 2s ease-in-out infinite;
+}
+
+@keyframes knight-rider-anim {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
