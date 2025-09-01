@@ -39,22 +39,6 @@ export const useChat = (activeProject: string | null) => {
   const [isBooting, setIsBooting] = useState(true);
   const isProcessingRef = useRef(false);
 
-  const addMessage = useCallback((
-    sender: DisplayMessage['sender'],
-    content: string,
-    type: DisplayMessage['type']
-  ) => {
-    const message: DisplayMessage = {
-      id: crypto.randomUUID(),
-      sender,
-      content,
-      type,
-      timestamp: Date.now()
-    };
-    setMessages(prev => [...prev, message]);
-    return message;
-  }, []);
-
   // Boot sequence effect
   useEffect(() => {
     if (activeProject) {
@@ -113,7 +97,7 @@ export const useChat = (activeProject: string | null) => {
       const updatedHistory = [...conversationHistory, newMessage];
       setConversationHistory(updatedHistory);
 
-      // FIXED: Use the correct API method - sendPrompt instead of sendMessage
+      // Use the correct API method
       const response = await chatApi.sendPrompt(activeProject, content, updatedHistory);
 
       // Add assistant response
