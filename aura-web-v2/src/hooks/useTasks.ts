@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { tasksApi } from '../services/tasks';
 import type { Task } from '../types/task';
-import { getWebSocketService, WebSocketMessage } from '../services/websocket';
+import { getWebSocketService } from '../services/websocket';
+import type { WebSocketMessage } from '../services/websocket';
 
 export const useTasks = (activeProject: string | null) => {
   const [tasks, setTasks] = useState<Task[]>([]);
