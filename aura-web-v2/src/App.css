@@ -294,6 +294,33 @@
 }
 
 /* Chat Interface Styles */
+/* NEW: Container for the new layout */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Make it fill the parent panel */
+  overflow: hidden; /* Prevent parent from scrolling */
+}
+
+/* NEW: Styles for the static banner */
+.aura-banner {
+  padding: 0.5rem 1rem;
+  background: #0a0a0a; /* Match the log display background */
+  color: #f4b942; /* Amber color */
+  text-align: center;
+  flex-shrink: 0; /* Prevent the banner from shrinking */
+  border-bottom: 1px solid #333; /* Separator line */
+}
+
+.aura-banner pre {
+  margin: 0;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.7rem; /* Make it a bit smaller */
+  line-height: 1.2;
+  white-space: pre; /* Keep this for ASCII art */
+  text-shadow: 0 0 5px rgba(244, 185, 66, 0.3);
+}
+
 .log-display {
   flex: 1;
   padding: 1rem;

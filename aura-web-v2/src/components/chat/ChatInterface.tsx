@@ -1,6 +1,6 @@
 // src/components/chat/ChatInterface.tsx
 import { useState, useRef, useEffect } from 'react';
-import { useChat, type DisplayMessage } from '../../hooks/useChat';
+import { useChat, type DisplayMessage, AURA_BANNER } from '../../hooks/useChat';
 
 // Get the return type of the hook to properly type the 'chat' prop
 type ChatHookReturn = ReturnType<typeof useChat>;
@@ -38,7 +38,12 @@ export const ChatInterface = ({ activeProject, chat }: ChatInterfaceProps) => {
   };
 
   return (
-    <>
+    <div className="chat-container">
+      {/* Render the banner as a static header */}
+      <div className="aura-banner">
+        <pre>{AURA_BANNER}</pre>
+      </div>
+
       <div className="log-display" ref={logRef}>
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
@@ -65,7 +70,7 @@ export const ChatInterface = ({ activeProject, chat }: ChatInterfaceProps) => {
           {isProcessing ? 'Thinking...' : 'Send'}
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

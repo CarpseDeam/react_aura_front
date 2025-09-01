@@ -11,7 +11,7 @@ export interface DisplayMessage {
   timestamp: number;
 }
 
-const AURA_BANNER = `
+export const AURA_BANNER = `
  █████╗ ██╗   ██╗██████╗  █████╗
 ██╔══██╗██║   ██║██╔══██╗██╔══██╗
 ███████║██║   ██║██████╔╝███████║
@@ -23,7 +23,7 @@ const AURA_BANNER = `
 `;
 
 const BOOT_SEQUENCE = [
-  { sender: 'AURA', content: AURA_BANNER, type: 'info' as const, delay: 100 },
+  // AURA_BANNER has been removed from here
   { sender: 'KERNEL', content: 'AURA KERNEL V4.0 ... ONLINE', type: 'info' as const, delay: 500 },
   { sender: 'SYSTEM', content: 'Establishing secure link to command deck...', type: 'info' as const, delay: 800 },
   { sender: 'NEURAL', content: 'Cognitive models synchronized.', type: 'good' as const, delay: 400 },

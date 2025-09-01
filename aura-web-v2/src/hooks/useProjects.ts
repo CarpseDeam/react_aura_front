@@ -3,16 +3,15 @@ import { projectsApi } from '../services/projects';
 
 export const useProjects = () => {
   const [projects, setProjects] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start in loading state
   const [error, setError] = useState('');
 
   const loadProjects = useCallback(async () => {
-    setLoading(true);
+    // Don't set loading to true here if it's already true on initial load
     setError('');
 
     try {
       const projectData = await projectsApi.getProjects();
-      // Assuming the API returns an array of project names
       setProjects(Array.isArray(projectData) ? projectData : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load projects');
@@ -29,13 +28,10 @@ export const useProjects = () => {
   const createProject = async (projectName: string): Promise<string> => {
     try {
       await projectsApi.createProject(projectName);
-      // Sanitize the project name (remove special characters, spaces, etc.)
+      // Sanitize the project name for local optimism, but refetch for truth
       const sanitizedName = projectName.toLowerCase().replace(/[^a-z0-9-_]/g, '_');
-
-      // Add to local state
-      setProjects(prev => [...prev, sanitizedName]);
+      await loadProjects(); // Refetch the list from the server
       setError('');
-
       return sanitizedName;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create project';
@@ -47,8 +43,7 @@ export const useProjects = () => {
   const deleteProject = async (projectName: string) => {
     try {
       await projectsApi.deleteProject(projectName);
-      // Remove from local state
-      setProjects(prev => prev.filter(p => p !== projectName));
+      await loadProjects(); // Refetch the list from the server
       setError('');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete project';
