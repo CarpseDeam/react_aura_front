@@ -10,10 +10,10 @@ interface SettingsModalProps {
 type TabType = 'keys' | 'models';
 
 const PROVIDERS = [
+  { name: 'google', label: 'Google Gemini', placeholder: 'AIza...' },
+  { name: 'deepseek', label: 'DeepSeek', placeholder: 'sk-...' },
   { name: 'openai', label: 'OpenAI', placeholder: 'sk-...' },
-  { name: 'anthropic', label: 'Anthropic', placeholder: 'sk-ant-...' },
-  { name: 'google', label: 'Google', placeholder: 'AI...' },
-  { name: 'deepseek', label: 'DeepSeek', placeholder: 'sk-...' }
+  { name: 'anthropic', label: 'Anthropic', placeholder: 'sk-ant-...' }
 ];
 
 const ROLES = [

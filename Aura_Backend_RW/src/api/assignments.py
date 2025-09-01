@@ -12,10 +12,10 @@ router = APIRouter(tags=["Model Assignments"])
 
 # This dictionary defines the models available for each provider.
 MODELS_TO_DISPLAY: Dict[str, List[str]] = {
-    "openai": ["gpt-4o", "gpt-4-turbo", "gpt-5"],  # gpt-5 is for future-proofing
-    "google": ["gemini-1.5-pro-latest", "gemini-2.5-pro", "gemini-2.5-flash"], # future-proofing
-    "anthropic": ["claude-3.5-sonnet-20240620", "claude-3-opus-20240229"],
-    "deepseek": ["deepseek-chat", "deepseek-reasoning", "deepseek-coder"],
+    "google": ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro-latest"],
+    "deepseek": ["deepseek-chat", "deepseek-reasoning"],
+    "openai": ["gpt-4o", "gpt-4-turbo", "gpt-4o-mini"],
+    "anthropic": ["claude-3.5-sonnet-20241022", "claude-3.5-haiku-20241022", "claude-3-opus-20240229"],
 }
 
 
