@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from src.db.database import engine
 from src.db import models
@@ -13,6 +14,11 @@ app = FastAPI(
     description="Backend services for the Aura AI development environment.",
     version="1.0.0"
 )
+
+# Add middleware to handle proxy headers.
+# This is crucial for deployments behind a reverse proxy (like on Railway)
+# to ensure the app knows it's running over HTTPS.
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 # --- THE FINAL FIX: A robust, regex-based CORS configuration ---
 # This pattern allows your main domain, any Vercel preview URLs, and localhost.
