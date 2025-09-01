@@ -1,15 +1,29 @@
 import { useState } from 'react';
-import { useTasks } from '../../hooks/useTasks';
 import { TaskItem } from './TaskItem';
+import type { Task } from '../../types/task';
 import './TaskList.css';
+
+// Define the shape of the object returned by the useTasks hook
+interface TasksHook {
+  tasks: Task[];
+  loading: boolean;
+  error: string;
+  dispatching: boolean;
+  addTask: (description: string) => Promise<void>;
+  updateTask: (taskId: number, description: string) => Promise<void>;
+  deleteTask: (taskId: number) => Promise<void>;
+  dispatchMission: () => Promise<void>;
+}
 
 interface TaskListProps {
   activeProject: string | null;
   isBooting: boolean;
+  tasksHook: TasksHook;
 }
 
-export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
+export const TaskList = ({ activeProject, isBooting, tasksHook }: TaskListProps) => {
   const [newTaskDescription, setNewTaskDescription] = useState('');
+  
   const {
     tasks,
     loading,
@@ -19,13 +33,12 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
     updateTask,
     deleteTask,
     dispatchMission
-  } = useTasks(activeProject);
+  } = tasksHook;
 
   const handleAddTask = async () => {
     if (!newTaskDescription.trim()) {
       setNewTaskDescription('New Task - Edit me!');
     }
-
     await addTask(newTaskDescription || 'New Task - Edit me!');
     setNewTaskDescription('');
   };
@@ -35,7 +48,6 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
       alert('No tasks to execute. Add some tasks first.');
       return;
     }
-
     if (confirm('Start mission execution? This will begin autonomous task processing.')) {
       await dispatchMission();
     }
@@ -53,14 +65,6 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
 
       <div className="task-section">
         <h4>Current Tasks ({tasks.length})</h4>
-        
-        {/* NEW: Thinking animation */}
-        {dispatching && (
-          <div className="thinking-animation">
-            <div className="knight-rider-bar"></div>
-          </div>
-        )}
-
         <div className="task-list">
           {loading ? (
             <div className="task-item">Loading tasks...</div>
@@ -100,12 +104,13 @@ export const TaskList = ({ activeProject, isBooting }: TaskListProps) => {
         </button>
       </div>
 
+      {/* The button text is now static. The disabled state provides sufficient feedback. */}
       <button
         className="dispatch-button"
         onClick={handleDispatch}
         disabled={isBooting || !activeProject || dispatching || tasks.length === 0}
       >
-        {dispatching ? 'EXECUTING MISSION...' : 'DISPATCH MISSION'}
+        DISPATCH MISSION
       </button>
     </div>
   );

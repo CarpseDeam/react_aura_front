@@ -1,24 +1,28 @@
-import { useState } from 'react'
-// Force redeploy for HTTPS env var
-import './App.css'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
-import { LandingPage } from './components/LandingPage'
-import { ProjectsModal } from './components/modals/ProjectsModal'
-import { SettingsModal } from './components/modals/SettingsModal'
-import { ChatInterface } from './components/chat/ChatInterface'
-import { TaskList } from './components/mission/TaskList'
-import { useChat } from './hooks/useChat'
-import { WorkspaceView } from './components/workspace/WorkspaceView'
+import { useState } from 'react';
+import './App.css';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LandingPage } from './components/LandingPage';
+import { ProjectsModal } from './components/modals/ProjectsModal';
+import { SettingsModal } from './components/modals/SettingsModal';
+import { ChatInterface } from './components/chat/ChatInterface';
+import { TaskList } from './components/mission/TaskList';
+import { useChat } from './hooks/useChat';
+import { useTasks } from './hooks/useTasks'; // Import useTasks here
+import { WorkspaceView } from './components/workspace/WorkspaceView';
 
 // Command Deck Component (for authenticated users)
 const CommandDeck = () => {
-  const [activeProject, setActiveProject] = useState<string | null>(null)
-  const [showProjectsModal, setShowProjectsModal] = useState(false)
-  const [showSettingsModal, setShowSettingsModal] = useState(false)
-  const [showWorkspace, setShowWorkspace] = useState(false)
+  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [showProjectsModal, setShowProjectsModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showWorkspace, setShowWorkspace] = useState(false);
 
-  const chat = useChat(activeProject)
-  const { user, logout } = useAuth()
+  // --- SINGLE SOURCE OF TRUTH --- 
+  // Both useChat and useTasks are called once here.
+  const chat = useChat(activeProject);
+  const tasksHook = useTasks(activeProject); // The single instance of the hook
+
+  const { user, logout } = useAuth();
 
   return (
     <div className="app-container">
@@ -57,7 +61,6 @@ const CommandDeck = () => {
         </div>
       </header>
 
-      {/* Main Content - FIXED LAYOUT: Chat on left, Mission Control on right */}
       <div className="main-content">
         {!showWorkspace ? (
           <div className="command-deck">
@@ -68,21 +71,24 @@ const CommandDeck = () => {
               />
             </div>
             <div className="right-panel">
+              {/* Pass the hook result down as a prop */}
               <TaskList
                 activeProject={activeProject}
                 isBooting={chat.isBooting}
+                tasksHook={tasksHook}
               />
             </div>
           </div>
         ) : (
+          /* Pass the hook result down as a prop */
           <WorkspaceView 
             activeProject={activeProject} 
             isBooting={chat.isBooting} 
+            tasksHook={tasksHook}
           />
         )}
       </div>
 
-      {/* Modals */}
       {showProjectsModal && (
         <ProjectsModal
           activeProject={activeProject}
@@ -97,12 +103,12 @@ const CommandDeck = () => {
         />
       )}
     </div>
-  )
-}
+  );
+};
 
 // Main App Component with Authentication
 const AppContent = () => {
-  const { isAuthenticated, loading } = useAuth()
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -112,11 +118,11 @@ const AppContent = () => {
           <p>Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
-  return isAuthenticated ? <CommandDeck /> : <LandingPage />
-}
+  return isAuthenticated ? <CommandDeck /> : <LandingPage />;
+};
 
 // Root App Component with AuthProvider
 function App() {
@@ -124,7 +130,7 @@ function App() {
     <AuthProvider>
       <AppContent />
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

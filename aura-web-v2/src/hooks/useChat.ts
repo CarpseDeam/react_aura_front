@@ -104,32 +104,52 @@ export const useChat = (activeProject: string | null) => {
 
     const handleSystemLog = (message: WebSocketMessage) => {
       if (message.type === 'system_log' && message.content) {
-        const terminalMessage: DisplayMessage = {
-          id: `terminal-${Date.now()}-${Math.random()}`,
-          sender: 'TERMINAL',
+        const logMessage: DisplayMessage = {
+          id: `log-${Date.now()}-${Math.random()}`,
+          sender: 'SYSTEM',
           content: message.content,
-          type: 'terminal',
+          type: 'info',
           timestamp: Date.now()
         };
-        setMessages(prev => [...prev, terminalMessage]);
+        setMessages(prev => [...prev, logMessage]);
       }
     };
 
     const handleAgentStatus = (message: WebSocketMessage) => {
       if (message.type === 'agent_status' && message.status) {
-        const statusMessage = message.status === 'thinking' ? '🧠 AURA is thinking...' :
-                             message.status === 'executing' ? '⚡ AURA is executing commands...' :
-                             message.status === 'idle' ? '✅ AURA completed task' : 
-                             `📡 AURA status: ${message.status}`;
-        
-        const terminalMessage: DisplayMessage = {
+        const status = message.status;
+        let type: DisplayMessage['type'];
+        let content: string;
+        let sender = 'AURA'; // Default sender for agent messages
+
+        switch (status) {
+          case 'thinking':
+            type = 'planning';
+            content = '🧠 Planning next steps...';
+            break;
+          case 'executing':
+            type = 'executing';
+            content = '⚡ Executing commands...';
+            break;
+          case 'idle':
+            type = 'good';
+            content = '✅ Task completed.';
+            break;
+          default:
+            type = 'info';
+            sender = 'STATUS';
+            content = `📡 AURA status: ${message.status}`;
+            break;
+        }
+
+        const statusMessage: DisplayMessage = {
           id: `status-${Date.now()}`,
-          sender: 'STATUS',
-          content: statusMessage,
-          type: 'terminal',
+          sender: sender,
+          content: content,
+          type: type,
           timestamp: Date.now()
         };
-        setMessages(prev => [...prev, terminalMessage]);
+        setMessages(prev => [...prev, statusMessage]);
       }
     };
 

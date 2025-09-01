@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { tasksApi } from '../services/tasks';
 import type { Task } from '../types/task';
 import { getWebSocketService } from '../services/websocket';
@@ -9,27 +9,7 @@ export const useTasks = (activeProject: string | null) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [dispatching, setDispatching] = useState(false);
-
-  // Effect to check the initial agent status when the component mounts or project changes
-  useEffect(() => {
-    if (!activeProject) {
-      setDispatching(false);
-      return;
-    }
-
-    const checkInitialStatus = async () => {
-      try {
-        const status = await tasksApi.getAgentStatus(activeProject);
-        setDispatching(status.is_running);
-      } catch (err) {
-        console.error("Failed to fetch initial agent status:", err);
-        // On error, default to not dispatching for safety
-        setDispatching(false);
-      }
-    };
-
-    checkInitialStatus();
-  }, [activeProject]);
+  const isInitialCheckDone = useRef(false);
 
   const loadTasks = useCallback(async () => {
     if (!activeProject) {
@@ -51,6 +31,42 @@ export const useTasks = (activeProject: string | null) => {
     }
   }, [activeProject]);
 
+  // A ref to hold the latest loadTasks function.
+  // This avoids adding loadTasks as a dependency to the WebSocket useEffect,
+  // which can cause unnecessary re-subscriptions.
+  const loadTasksRef = useRef(loadTasks);
+  useEffect(() => {
+    loadTasksRef.current = loadTasks;
+  }, [loadTasks]);
+
+  // Effect to check the initial agent status when the component mounts or project changes
+  useEffect(() => {
+    if (!activeProject) {
+      setDispatching(false);
+      isInitialCheckDone.current = true;
+      return;
+    }
+
+    // Reset for the new project
+    isInitialCheckDone.current = false;
+    setDispatching(true); // Assume it might be running until we confirm
+
+    const checkInitialStatus = async () => {
+      try {
+        const status = await tasksApi.getAgentStatus(activeProject);
+        setDispatching(status.is_running);
+      } catch (err) {
+        console.error("Failed to fetch initial agent status:", err);
+        setDispatching(false); // On error, default to not dispatching
+      } finally {
+        // This is the crucial gate. No WebSocket messages will be processed until this is true.
+        isInitialCheckDone.current = true;
+      }
+    };
+
+    checkInitialStatus();
+  }, [activeProject]);
+
   useEffect(() => {
     loadTasks();
   }, [loadTasks]);
@@ -64,16 +80,19 @@ export const useTasks = (activeProject: string | null) => {
     const webSocketService = getWebSocketService();
 
     const handleTaskUpdate = () => {
-      loadTasks();
+      loadTasksRef.current();
     };
 
     const handleAgentStatus = (message: WebSocketMessage) => {
+      // The gate: Do not process WebSocket status until the initial API check is done.
+      if (!isInitialCheckDone.current) return;
+
       if (message.type === 'agent_status') {
         if (message.status === 'thinking' || message.status === 'executing') {
           setDispatching(true);
         } else if (message.status === 'idle') {
           setDispatching(false);
-          loadTasks(); // Refresh tasks when agent is done
+          loadTasksRef.current(); // Refresh tasks when agent is done
         }
       }
     };
@@ -87,7 +106,7 @@ export const useTasks = (activeProject: string | null) => {
       unsubscribeAgent();
       unsubscribeMission();
     };
-  }, [activeProject, loadTasks]);
+  }, [activeProject]); // Dependency array is now safer
 
   const addTask = async (description: string) => {
     if (!activeProject) return;
@@ -127,6 +146,8 @@ export const useTasks = (activeProject: string | null) => {
 
     setError('');
     try {
+      // Set dispatching true immediately for better UX
+      setDispatching(true);
       await tasksApi.dispatchMission(activeProject);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to dispatch mission');
