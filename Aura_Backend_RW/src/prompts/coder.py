@@ -74,7 +74,7 @@ CODER_PROMPT = textwrap.dedent("""
         ```
 
     Now, generate the single, raw JSON object containing your `thought` and the `tool_call` required to accomplish the current task.
-    """))
+    """)
 
 
 # This prompt is now used by the DevelopmentTeamService itself.
@@ -136,4 +136,4 @@ CODER_PROMPT_STREAMING = textwrap.dedent("""
     {RAW_CODE_OUTPUT_RULE}
 
     Execute your mandate now. Generate the complete code for `{path}`.
-    """))
+    """)
