@@ -29,5 +29,9 @@ export const tasksApi = {
       method: 'POST',
       body: JSON.stringify({ project_name: projectName })
     });
+  },
+
+  async getAgentStatus(projectName: string) {
+    return apiClient<{ is_running: boolean }>(`/agent/projects/${projectName}/status`);
   }
 };

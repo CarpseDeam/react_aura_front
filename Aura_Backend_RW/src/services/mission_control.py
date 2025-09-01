@@ -23,9 +23,15 @@ async def request_mission_stop(user_id: str):
 
 
 async def is_mission_running(user_id: str) -> bool:
-    """Checks if a mission should continue running for a user."""
+    """Checks if a mission should continue running for a user. Defaults to True if no state is found for safety within loops."""
     async with _lock:
         return _mission_states.get(user_id, True)
+
+
+async def get_mission_status(user_id: str) -> bool:
+    """Checks if a mission is currently active (i.e., has a state entry)."""
+    async with _lock:
+        return user_id in _mission_states
 
 
 async def set_mission_finished(user_id: str):

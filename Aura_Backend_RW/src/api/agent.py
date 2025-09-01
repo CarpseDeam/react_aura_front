@@ -165,6 +165,19 @@ class FileWriteRequest(BaseModel):
     path: str
     content: str
 
+@router.get("/{project_name}/status", response_model=Dict[str, bool])
+async def get_agent_mission_status(
+        project_name: str,
+        current_user: User = Depends(get_current_user)
+):
+    """
+    Returns the current mission running status for the user.
+    """
+    # project_name is part of the path but not directly needed here,
+    # as mission status is tracked per user.
+    is_running = await mission_control.get_mission_status(str(current_user.id))
+    return {"is_running": is_running}
+
 @router.post("/{project_name}/prompt", status_code=status.HTTP_202_ACCEPTED)
 async def handle_agent_prompt(
         project_name: str,

@@ -10,9 +10,25 @@ export const useTasks = (activeProject: string | null) => {
   const [error, setError] = useState('');
   const [dispatching, setDispatching] = useState(false);
 
-  // Reset dispatching when project changes
+  // Effect to check the initial agent status when the component mounts or project changes
   useEffect(() => {
-    setDispatching(false);
+    if (!activeProject) {
+      setDispatching(false);
+      return;
+    }
+
+    const checkInitialStatus = async () => {
+      try {
+        const status = await tasksApi.getAgentStatus(activeProject);
+        setDispatching(status.is_running);
+      } catch (err) {
+        console.error("Failed to fetch initial agent status:", err);
+        // On error, default to not dispatching for safety
+        setDispatching(false);
+      }
+    };
+
+    checkInitialStatus();
   }, [activeProject]);
 
   const loadTasks = useCallback(async () => {
@@ -42,7 +58,6 @@ export const useTasks = (activeProject: string | null) => {
   // WebSocket integration for real-time updates
   useEffect(() => {
     if (!activeProject) {
-      setDispatching(false);
       return;
     }
 
@@ -78,7 +93,6 @@ export const useTasks = (activeProject: string | null) => {
     if (!activeProject) return;
 
     try {
-      // The backend will send a websocket event, which will trigger a reload.
       await tasksApi.addTask(activeProject, description);
       setError('');
     } catch (err) {
@@ -90,7 +104,6 @@ export const useTasks = (activeProject: string | null) => {
     if (!activeProject) return;
 
     try {
-      // The backend will send a websocket event, which will trigger a reload.
       await tasksApi.updateTask(activeProject, taskId.toString(), description);
       setError('');
     } catch (err) {
@@ -102,7 +115,6 @@ export const useTasks = (activeProject: string | null) => {
     if (!activeProject) return;
 
     try {
-      // The backend will send a websocket event, which will trigger a reload.
       await tasksApi.deleteTask(activeProject, taskId.toString());
       setError('');
     } catch (err) {
@@ -114,12 +126,11 @@ export const useTasks = (activeProject: string | null) => {
     if (!activeProject) return;
 
     setError('');
-    // The UI will now update via agent_status websocket events.
     try {
       await tasksApi.dispatchMission(activeProject);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to dispatch mission');
-      setDispatching(false); // Reset if the initial dispatch fails
+      setDispatching(false);
     }
   };
 
