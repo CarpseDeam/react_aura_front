@@ -25,12 +25,17 @@ export const getAuthHeaders = (): HeadersInit => {
  * - Parses JSON response bodies.
  */
 export async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const requestHeaders = {
+    ...getAuthHeaders(),
+    ...options.headers,
+  };
+
+  // --- FINAL DIAGNOSTIC LOG ---
+  console.log("Sending request with headers:", requestHeaders);
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
-    headers: {
-      ...getAuthHeaders(),
-      ...options.headers,
-    },
+    headers: requestHeaders,
   });
 
   if (!response.ok) {
