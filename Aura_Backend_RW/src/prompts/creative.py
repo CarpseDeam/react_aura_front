@@ -93,6 +93,9 @@ SEQUENCER_PROMPT = textwrap.dedent("""
 AURA_REPLANNER_PROMPT = textwrap.dedent("""
     You are an expert AI project manager, specializing in recovering from failed plans. A previous plan has hit a roadblock, and you must create a new, smarter plan to get the project back on track.
 
+    **--- PRIMARY DIRECTIVE: ROOT CAUSE ANALYSIS ---**
+    You MUST first perform a root cause analysis in the `thought` field. Analyze the error in the context of the mission history and determine the most likely reason for the failure. Only after this analysis should you formulate the new plan.
+
     **FAILURE CONTEXT BUNDLE:**
 
     1.  **ORIGINAL GOAL:** The user's initial high-level request.
@@ -110,16 +113,26 @@ AURA_REPLANNER_PROMPT = textwrap.dedent("""
         `{error_message}`
 
     **YOUR MISSION:**
-    Analyze the failure context and create a new list of tasks to replace the failed task and all subsequent tasks. Your new plan must intelligently address the root cause of the error.
+    Analyze the failure context, perform a root cause analysis, and create a new list of tasks to replace the failed task and all subsequent tasks. Your new plan must intelligently address the root cause of the error.
 
-    **RE-PLANNING DIRECTIVES (UNBREAKABLE LAWS):**
-    1.  **ADDRESS THE FAILURE:** Your new plan's first steps MUST directly address the `{error_message}`. For example, if the error was a missing dependency, the first new step should be to add it. If it was a code error, the first step should be to fix the code in the problematic file.
-    2.  **CREATE A FORWARD-LOOKING PLAN:** Your plan should not just fix the error, but should also include the necessary steps to complete the original task that failed.
-    3.  **REFERENCE THE ORIGINAL PLAN:** You may reuse, reorder, or discard any of the original tasks that came *after* the failed task.
-    4.  **OUTPUT FORMAT:** Your response must be a single JSON object containing a "plan" key. The value is a list of human-readable strings representing the new tasks.
+    **OUTPUT FORMAT (UNBREAKABLE LAW):**
+    Your response MUST be a single JSON object with two keys: `thought` and `plan`.
+    - `thought`: Your step-by-step root cause analysis. What went wrong and why?
+    - `plan`: A list of human-readable strings representing the new, corrective tasks.
 
+    **--- EXAMPLE OF A PERFECT RESPONSE ---**
+    ```json
+    {{
+      "thought": "The root cause of the failure appears to be a `ModuleNotFoundError`. The task `Implement the FastAPI routes in src/api/routes.py` failed because the code tried to import `Contact` from `src.db.models`, but the `src/db` directory was never created as a package. The original plan missed adding an `__init__.py` file to the `db` directory. My new plan will first create this missing `__init__.py` file, and then re-attempt the original failed task.",
+      "plan": [
+        "Create an `__init__.py` file in the `src/db` directory to make it a package.",
+        "Implement the FastAPI routes in `src/api/routes.py`, including endpoints to get and create contacts.",
+        "Add a root endpoint to `src/main.py` for health checks."
+      ]
+    }}
+    ```
     ---
-    Now, generate the new JSON plan to fix the error and get the mission back on track.
+    Now, generate the new JSON response containing your `thought` and the corrective `plan`.
     """)
 
 AURA_MISSION_SUMMARY_PROMPT = textwrap.dedent("""
@@ -167,3 +180,4 @@ CREATIVE_ASSISTANT_PROMPT = textwrap.dedent("""
 
     Now, provide your conversational response, apennding a tool call block only if necessary.
     """)
+

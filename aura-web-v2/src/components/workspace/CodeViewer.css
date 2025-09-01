@@ -1,0 +1,229 @@
+/* src/components/workspace/CodeViewer.css */
+.code-viewer {
+  flex: 1;
+  background: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #d4d4d4;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
+}
+
+.code-tabs {
+  display: flex;
+  background: #2d2d2d;
+  border-bottom: 1px solid #333;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.code-tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #2d2d2d;
+  border-right: 1px solid #333;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.code-tab:hover {
+  background: #383838;
+}
+
+.code-tab.active {
+  background: #1e1e1e;
+  color: #f4b942;
+  border-bottom: 2px solid #f4b942;
+}
+
+.tab-icon {
+  margin-right: 6px;
+  font-size: 12px;
+}
+
+.tab-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.tab-modified {
+  color: #f4b942;
+  margin-left: 4px;
+}
+
+.tab-close {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 0 2px;
+  margin-left: 4px;
+  border-radius: 2px;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.tab-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.code-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-loading,
+.code-error,
+.code-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+  text-align: center;
+}
+
+.code-error {
+  color: #ff6b6b;
+}
+
+.code-welcome h3 {
+  color: #f4b942;
+  margin-bottom: 8px;
+}
+
+.code-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.code-header {
+  padding: 8px 16px;
+  background: #252526;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.code-file-path {
+  color: #cccccc;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.code-language {
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.code-body {
+  flex: 1;
+  display: flex;
+  overflow: auto;
+  position: relative;
+}
+
+.line-numbers {
+  background: #1e1e1e;
+  border-right: 1px solid #333;
+  padding: 16px 8px;
+  color: #858585;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: right;
+  user-select: none;
+  min-width: 50px;
+  flex-shrink: 0;
+}
+
+.line-number {
+  height: 18px;
+  padding-right: 8px;
+}
+
+.code-text {
+  flex: 1;
+  padding: 16px;
+  font-size: 12px;
+  line-height: 18px;
+  overflow: auto;
+  white-space: pre;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
+}
+
+.code-line {
+  height: 18px;
+  color: #d4d4d4;
+}
+
+/* Basic Python syntax highlighting */
+.code-line.python {
+  color: #d4d4d4;
+}
+
+/* You can add more sophisticated syntax highlighting here */
+.code-line:has-text('def '),
+.code-line:has-text('class '),
+.code-line:has-text('import '),
+.code-line:has-text('from ') {
+  color: #569cd6;
+}
+
+/* Scrollbar styling */
+.code-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-body::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.code-body::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.code-body::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+.code-body::-webkit-scrollbar-corner {
+  background: #2d2d2d;
+}
+
+.code-text::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-text::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.code-text::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.code-text::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}

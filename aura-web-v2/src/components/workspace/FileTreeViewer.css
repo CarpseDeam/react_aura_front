@@ -1,0 +1,147 @@
+/* src/components/workspace/FileTreeViewer.css */
+.file-tree-viewer {
+  width: 280px;
+  background: #1a1a1a;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #f4b942;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.file-tree-header {
+  padding: 8px 12px;
+  background: #252526;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.file-tree-header h3 {
+  color: #f4b942;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.refresh-button {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: rgba(244, 185, 66, 0.1);
+  color: #f4b942;
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-tree-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.file-tree-loading,
+.file-tree-error,
+.file-tree-empty {
+  padding: 16px 12px;
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+}
+
+.file-tree-error {
+  color: #ff6b6b;
+}
+
+.file-tree-list {
+  padding: 4px 0;
+}
+
+.file-tree-node {
+  /* Container for each node and its children */
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  min-height: 24px;
+  border-radius: 0 4px 4px 0;
+  margin: 1px 0;
+}
+
+.file-tree-item:hover {
+  background: rgba(244, 185, 66, 0.1);
+  color: #f4b942;
+}
+
+.file-tree-item.selected {
+  background: rgba(244, 185, 66, 0.2);
+  color: #f4b942;
+  border-left: 2px solid #f4b942;
+}
+
+.file-tree-item.directory {
+  color: #cccccc;
+  font-weight: 500;
+}
+
+.file-tree-item.file {
+  color: #d4d4d4;
+}
+
+.file-icon {
+  margin-right: 6px;
+  font-size: 12px;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.file-tree-children {
+  /* Children are rendered recursively with increased padding */
+}
+
+/* Scrollbar styling */
+.file-tree-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.file-tree-content::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.file-tree-content::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.file-tree-content::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
